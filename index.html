@@ -443,12 +443,12 @@
 
 <!-- FILTERS -->
 <div class="filters">
-  <button class="filter-btn active">All</button>
-  <button class="filter-btn">Outreach</button>
-  <button class="filter-btn">AI</button>
-  <button class="filter-btn">CRM</button>
-  <button class="filter-btn">Operations</button>
-  <button class="filter-btn">Data</button>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="outreach">Outreach</button>
+  <button class="filter-btn" data-filter="ai">AI</button>
+  <button class="filter-btn" data-filter="crm">CRM</button>
+  <button class="filter-btn" data-filter="ops">Operations</button>
+  <button class="filter-btn" data-filter="data">Data</button>
 </div>
 
 <!-- GRID -->
@@ -457,7 +457,7 @@
   <div class="cards-grid">
 
     <!-- 1. FEATURED: LinkedIn Outreach System -->
-    <div class="card featured" id="outreach">
+    <div class="card featured" data-category="outreach" data-href="linkedin-outreach.html" id="outreach">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(37,99,235,0.15);font-size:24px;">🎯</div>
         <span class="card-status status-live">LIVE</span>
@@ -553,7 +553,7 @@
     </div>
 
     <!-- 2. AI Video Lead Generator -->
-    <div class="card">
+    <div class="card" data-category="ai" data-href="video-generator.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(124,58,237,0.15);">🎬</div>
         <span class="card-status status-client">CLIENT</span>
@@ -579,7 +579,7 @@
     </div>
 
     <!-- 3. Company Intelligence Monitor -->
-    <div class="card" id="intelligence">
+    <div class="card" id="intelligence" data-category="intelligence" data-href="company-monitor.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(217,119,6,0.15);">📡</div>
         <span class="card-status status-client">CLIENT</span>
@@ -605,7 +605,7 @@
     </div>
 
     <!-- 4. CRM Auto-Push Pipeline -->
-    <div class="card">
+    <div class="card" data-category="crm" data-href="crm-pipeline.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(5,150,105,0.15);">🔁</div>
         <span class="card-status status-client">CLIENT</span>
@@ -630,7 +630,7 @@
     </div>
 
     <!-- 5. Google Maps Lead Scout -->
-    <div class="card">
+    <div class="card" data-category="outreach" data-href="google-maps-leads.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(8,145,178,0.15);">🗺️</div>
         <span class="card-status status-built">BUILT</span>
@@ -655,7 +655,7 @@
     </div>
 
     <!-- 6. RAG Knowledge Assistant -->
-    <div class="card" id="ai">
+    <div class="card" id="ai" data-category="ai" data-href="rag-assistant.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(124,58,237,0.15);">🧠</div>
         <span class="card-status status-client">CLIENT</span>
@@ -681,7 +681,7 @@
     </div>
 
     <!-- 7. Recruitment Data Enrichment -->
-    <div class="card">
+    <div class="card" data-category="data" data-href="recruitment-engine.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(37,99,235,0.15);">👥</div>
         <span class="card-status status-client">CLIENT</span>
@@ -707,7 +707,7 @@
     </div>
 
     <!-- 8. Client Onboarding Automation -->
-    <div class="card" id="ops">
+    <div class="card" id="ops" data-category="ops" data-href="client-onboarding.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(5,150,105,0.15);">🤝</div>
         <span class="card-status status-client">CLIENT</span>
@@ -733,7 +733,7 @@
     </div>
 
     <!-- 9. Investor LP Report Automation -->
-    <div class="card">
+    <div class="card" data-category="ops" data-href="investor-reports.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(217,119,6,0.15);">📈</div>
         <span class="card-status status-built">BUILT</span>
@@ -759,7 +759,7 @@
     </div>
 
     <!-- 10. Event Follow-Up Engine -->
-    <div class="card">
+    <div class="card" data-category="ops" data-href="event-followup.html">
       <div class="card-top">
         <div class="card-icon" style="background:rgba(219,39,119,0.15);">🎪</div>
         <span class="card-status status-built">BUILT</span>
@@ -796,6 +796,59 @@
     <a href="mailto:bayoadegokeiyanu@gmail.com" class="btn-secondary">Send me a message</a>
   </div>
 </div>
+
+
+<script>
+const btns = document.querySelectorAll('.filter-btn');
+const cards = document.querySelectorAll('.card[data-category]');
+btns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    btns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.filter;
+    cards.forEach(card => {
+      if (cat === 'all' || card.dataset.category.includes(cat)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+// Make cards clickable
+document.querySelectorAll('.card[data-href]').forEach(card => {
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', e => {
+    if (!e.target.closest('a')) window.location.href = card.dataset.href;
+  });
+});
+</script>
+
+
+<script>
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.filter;
+    document.querySelectorAll('.card[data-category]').forEach(card => {
+      if (cat === 'all' || card.dataset.category.includes(cat)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Clickable cards
+document.querySelectorAll('.card[data-href]').forEach(card => {
+  card.addEventListener('click', e => {
+    if (!e.target.closest('a')) window.location.href = card.dataset.href;
+  });
+});
+</script>
 
 </body>
 </html>

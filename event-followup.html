@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Event Follow-Up Engine — Jonathan Bayo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--blue:#2563eb;--blue-dark:#1d4ed8;--cyan:#0891b2;--dark:#0f172a;--gray-800:#1e293b;--gray-600:#475569;--gray-400:#94a3b8;--gray-200:#e2e8f0;--gray-100:#f8fafc;--green:#059669;--white:#fff;}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--dark);color:var(--white);line-height:1.6;}
+nav{position:sticky;top:0;z-index:100;background:rgba(15,23,42,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.nav-logo{font-weight:800;font-size:16px;color:var(--white);}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{font-size:13px;color:var(--gray-400);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-cta{background:var(--blue);color:var(--white);font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;text-decoration:none;}
+.nav-cta:hover{background:var(--blue-dark);}
+.back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--gray-400);font-size:13px;font-weight:500;text-decoration:none;margin-bottom:32px;transition:color 0.2s;}
+.back-btn:hover{color:var(--white);}
+.page{max-width:900px;margin:0 auto;padding:60px 40px 100px;}
+.project-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(8,145,178,0.12);border:1px solid rgba(8,145,178,0.3);color:#67e8f9;font-size:11px;font-weight:700;padding:5px 14px;border-radius:100px;margin-bottom:20px;letter-spacing:1px;text-transform:uppercase;}
+h1{font-size:clamp(28px,5vw,48px);font-weight:900;line-height:1.1;letter-spacing:-1px;margin-bottom:16px;}
+.lead{font-size:17px;color:var(--gray-400);line-height:1.7;margin-bottom:48px;max-width:680px;}
+.section{margin-bottom:48px;}
+.section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-400);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.problem-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:24px 28px;margin-bottom:12px;}
+.problem-box p{font-size:14px;color:#fca5a5;line-height:1.7;}
+.solution-box{background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.2);border-radius:14px;padding:24px 28px;}
+.solution-box p{font-size:14px;color:#6ee7b7;line-height:1.7;}
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.step:last-child{border-bottom:none;}
+.step-num{width:36px;height:36px;border-radius:10px;background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#60a5fa;flex-shrink:0;margin-top:2px;}
+.step-icon{font-size:20px;width:36px;text-align:center;flex-shrink:0;margin-top:4px;}
+.step-body h4{font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.step-body p{font-size:13px;color:var(--gray-400);line-height:1.65;}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;}
+.metric-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 24px;}
+.metric-val{font-size:36px;font-weight:900;line-height:1;margin-bottom:6px;}
+.metric-val.green{color:#34d399;}
+.metric-val.blue{color:#60a5fa;}
+.metric-val.amber{color:#fbbf24;}
+.metric-val.purple{color:#a78bfa;}
+.metric-label{font-size:12px;color:var(--gray-400);}
+.tech-grid{display:flex;flex-wrap:wrap;gap:10px;}
+.tech-chip{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;color:var(--gray-400);}
+.flow-visual{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:28px;overflow-x:auto;}
+.flow-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.flow-node{background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.25);border-radius:10px;padding:12px 16px;text-align:center;min-width:110px;}
+.flow-node-icon{font-size:20px;margin-bottom:4px;}
+.flow-node-name{font-size:11px;font-weight:700;color:var(--white);}
+.flow-node-sub{font-size:10px;color:var(--gray-400);margin-top:2px;}
+.flow-arrow{color:rgba(255,255,255,0.25);font-size:18px;}
+.cta-box{background:linear-gradient(135deg,rgba(37,99,235,0.1),rgba(124,58,237,0.08));border:1px solid rgba(37,99,235,0.2);border-radius:16px;padding:36px;text-align:center;margin-top:60px;}
+.cta-box h3{font-size:22px;font-weight:800;margin-bottom:10px;}
+.cta-box p{font-size:14px;color:var(--gray-400);margin-bottom:24px;}
+.btn-primary{display:inline-block;background:var(--blue);color:var(--white);padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;}
+@media(max-width:768px){nav{padding:0 20px;}.nav-links{display:none;}.page{padding:40px 20px 80px;}.metrics-row{grid-template-columns:1fr 1fr;}.flow-row{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo"><a href="index.html" style="text-decoration:none;color:inherit;">Jonathan<span style="color:#0891b2;">.</span>dev</a></div>
+  <ul class="nav-links">
+    <li><a href="index.html#outreach">Outreach</a></li>
+    <li><a href="index.html#intelligence">Intelligence</a></li>
+    <li><a href="index.html#ai">AI Systems</a></li>
+    <li><a href="index.html#ops">Ops</a></li>
+  </ul>
+  <a href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan" class="nav-cta">Book a Call</a>
+</nav>
+<div class="page">
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+  <div class="project-badge">Operations Automation</div>
+  <h1>🎪 Event Follow-Up Engine</h1>
+  <p class="lead">After any event, attendee data flows in automatically. Within 24 hours, every attendee gets a personalized follow-up based on which sessions they attended — no one falls through the cracks.</p>
+
+  <div class="section">
+    <div class="section-title">The Problem</div>
+    <div class="problem-box"><p>Events generate a ton of warm leads, but most follow-up is either too slow, too generic, or never happens at all. Manually emailing 300 attendees with personalized messages is impossible. So teams either send a generic blast or do nothing.</p></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Solution</div>
+    <div class="solution-box"><p>Attendee data from the event platform flows into the workflow automatically. Each attendee is segmented by which sessions they attended and any notes taken. Claude writes a personalized follow-up for each person that references their specific experience. Emails go out within 24 hours of the event ending, while the memory is still fresh.</p></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">How It Works</div>
+    <div class="flow-visual"><div class="flow-row"><div class="flow-node">
+      <div class="flow-node-icon">📥</div>
+      <div class="flow-node-name">Event Data</div>
+      <div class="flow-node-sub">Auto-import</div>
+    </div><div class="flow-arrow">→</div><div class="flow-node">
+      <div class="flow-node-icon">🏷️</div>
+      <div class="flow-node-name">Segment</div>
+      <div class="flow-node-sub">By session</div>
+    </div><div class="flow-arrow">→</div><div class="flow-node">
+      <div class="flow-node-icon">🧠</div>
+      <div class="flow-node-name">Claude</div>
+      <div class="flow-node-sub">Personalize</div>
+    </div><div class="flow-arrow">→</div><div class="flow-node">
+      <div class="flow-node-icon">📧</div>
+      <div class="flow-node-name">Gmail Send</div>
+      <div class="flow-node-sub">Within 24hrs</div>
+    </div><div class="flow-arrow">→</div><div class="flow-node">
+      <div class="flow-node-icon">📊</div>
+      <div class="flow-node-name">Log</div>
+      <div class="flow-node-sub">CRM / Sheets</div>
+    </div><div class="flow-arrow">→</div><div class="flow-node">
+      <div class="flow-node-icon">🔔</div>
+      <div class="flow-node-name">Flag</div>
+      <div class="flow-node-sub">Hot leads</div>
+    </div></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Step by Step</div>
+    <div class="steps"><div class="step">
+      <div class="step-icon">📥</div>
+      <div class="step-body"><h4>Attendee Data Flows In</h4><p>Exported from the event platform or captured via webhook. Includes name, email, sessions attended, and any notes.</p></div>
+    </div><div class="step">
+      <div class="step-icon">🏷️</div>
+      <div class="step-body"><h4>Segment by Interest</h4><p>Attendees are grouped by which sessions they attended or which topics they engaged with.</p></div>
+    </div><div class="step">
+      <div class="step-icon">🧠</div>
+      <div class="step-body"><h4>Claude Personalizes Each Email</h4><p>Given the attendee's sessions and any notes, Claude writes a follow-up that feels human — referencing what they actually experienced at the event.</p></div>
+    </div><div class="step">
+      <div class="step-icon">📧</div>
+      <div class="step-body"><h4>Emails Sent Within 24 Hours</h4><p>The whole batch goes out while the event is still top of mind. 30-second gap between sends to stay safe from spam filters.</p></div>
+    </div><div class="step">
+      <div class="step-icon">📊</div>
+      <div class="step-body"><h4>Log to CRM or Sheets</h4><p>Every contact is logged with their engagement level, sessions attended, and follow-up sent — ready for the sales team.</p></div>
+    </div><div class="step">
+      <div class="step-icon">🔔</div>
+      <div class="step-body"><h4>Hot Leads Flagged</h4><p>Attendees who engaged most (sessions attended, questions asked) are flagged for personal follow-up by the team.</p></div>
+    </div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Results</div>
+    <div class="metrics-row"><div class="metric-card"><div class="metric-val green">24hr</div><div class="metric-label">Follow-up time</div></div><div class="metric-card"><div class="metric-val blue">0</div><div class="metric-label">Leads missed</div></div><div class="metric-card"><div class="metric-val amber">300+</div><div class="metric-label">Attendees/event</div></div><div class="metric-card"><div class="metric-val purple">3x</div><div class="metric-label">vs generic blast</div></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tech Stack</div>
+    <div class="tech-grid"><div class="tech-chip">n8n</div><div class="tech-chip">Claude API</div><div class="tech-chip">Gmail OAuth2</div><div class="tech-chip">Airtable</div><div class="tech-chip">Webhooks</div><div class="tech-chip">Google Sheets</div></div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Want this built for you?</h3>
+    <p>Tell me what you're trying to automate. Most things can be set up in a week.</p>
+    <a href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan" class="btn-primary">Book a 15-min Call</a>
+  </div>
+</div>
+</body>
+</html>
