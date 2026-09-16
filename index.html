@@ -1,854 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Automation Portfolio — Jonathan Bayo</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --blue: #2563eb;
-      --blue-dark: #1d4ed8;
-      --blue-light: #eff6ff;
-      --cyan: #0891b2;
-      --cyan-light: #ecfeff;
-      --dark: #0f172a;
-      --gray-800: #1e293b;
-      --gray-600: #475569;
-      --gray-400: #94a3b8;
-      --gray-200: #e2e8f0;
-      --gray-100: #f8fafc;
-      --green: #059669;
-      --green-light: #ecfdf5;
-      --amber: #d97706;
-      --amber-light: #fffbeb;
-      --purple: #7c3aed;
-      --purple-light: #f5f3ff;
-      --white: #fff;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--dark);
-      color: var(--white);
-      line-height: 1.6;
-    }
-
-    /* ─── NAV ─── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(15,23,42,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 60px;
-    }
-    .nav-logo { font-weight: 800; font-size: 16px; color: var(--white); }
-    .nav-logo span { color: var(--cyan); }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a { font-size: 13px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--white); }
-    .nav-cta {
-      background: var(--blue);
-      color: var(--white);
-      font-size: 13px;
-      font-weight: 600;
-      padding: 8px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .nav-cta:hover { background: var(--blue-dark); }
-
-    /* ─── HERO ─── */
-    .hero {
-      padding: 100px 40px 80px;
-      text-align: center;
-      max-width: 860px;
-      margin: 0 auto;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(8,145,178,0.12);
-      border: 1px solid rgba(8,145,178,0.3);
-      color: #67e8f9;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 24px;
-      letter-spacing: 0.5px;
-    }
-    .hero-badge::before { content: ''; width: 6px; height: 6px; background: #67e8f9; border-radius: 50%; }
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 64px);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
-      margin-bottom: 20px;
-    }
-    .hero h1 .highlight {
-      background: linear-gradient(135deg, #60a5fa, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: 18px;
-      color: var(--gray-400);
-      max-width: 560px;
-      margin: 0 auto 40px;
-      line-height: 1.7;
-    }
-    .hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-    }
-    .stat { text-align: center; }
-    .stat-number { font-size: 32px; font-weight: 800; color: var(--white); line-height: 1; }
-    .stat-number span { color: var(--cyan); }
-    .stat-label { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
-
-    /* ─── FILTERS ─── */
-    .filters {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      padding: 0 40px 60px;
-    }
-    .filter-btn {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--gray-400);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 7px 16px;
-      border-radius: 100px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: var(--white);
-    }
-
-    /* ─── GRID ─── */
-    .grid-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 40px 120px;
-    }
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gray-400);
-      margin-bottom: 32px;
-      padding-left: 2px;
-    }
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 20px;
-    }
-
-    /* ─── CARD ─── */
-    .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 28px;
-      transition: all 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(37,99,235,0.06), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .card:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-2px); }
-    .card:hover::before { opacity: 1; }
-
-    .card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .card-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-    .card-status {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      padding: 4px 10px;
-      border-radius: 100px;
-    }
-    .status-live { background: rgba(5,150,105,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
-    .status-client { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
-    .status-built { background: rgba(8,145,178,0.15); color: #67e8f9; border: 1px solid rgba(103,232,249,0.2); }
-
-    .card h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-    .card-desc {
-      font-size: 13px;
-      color: var(--gray-400);
-      line-height: 1.65;
-      margin-bottom: 20px;
-    }
-
-    /* Flow */
-    .flow {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .flow-step {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--gray-400);
-      padding: 4px 9px;
-      border-radius: 6px;
-      white-space: nowrap;
-    }
-    .flow-arrow { color: rgba(255,255,255,0.2); font-size: 11px; }
-
-    /* Metrics */
-    .metrics {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .metric {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      padding: 10px 14px;
-      flex: 1;
-    }
-    .metric-val {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--white);
-      line-height: 1;
-      margin-bottom: 3px;
-    }
-    .metric-val.green { color: #34d399; }
-    .metric-val.blue { color: #60a5fa; }
-    .metric-val.amber { color: #fbbf24; }
-    .metric-lab { font-size: 10px; color: var(--gray-400); }
-
-    /* Tags */
-    .tags { display: flex; gap: 6px; flex-wrap: wrap; }
-    .tag {
-      font-size: 10px;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 6px;
-    }
-    .tag-blue { background: rgba(37,99,235,0.15); color: #93c5fd; }
-    .tag-green { background: rgba(5,150,105,0.15); color: #6ee7b7; }
-    .tag-purple { background: rgba(124,58,237,0.15); color: #c4b5fd; }
-    .tag-amber { background: rgba(217,119,6,0.15); color: #fcd34d; }
-    .tag-cyan { background: rgba(8,145,178,0.15); color: #67e8f9; }
-    .tag-pink { background: rgba(219,39,119,0.15); color: #f9a8d4; }
-
-    /* ─── FEATURED CARD ─── */
-    .card.featured {
-      grid-column: span 2;
-      background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.06));
-      border-color: rgba(37,99,235,0.2);
-    }
-    .card.featured .card-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .card.featured h3 { font-size: 20px; }
-    .card.featured .card-desc { font-size: 14px; }
-
-    /* Flowchart */
-    .flowchart {
-      background: rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 20px;
-    }
-    .flowchart-title {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--gray-400);
-      margin-bottom: 16px;
-    }
-    .flowchart-steps { display: flex; flex-direction: column; gap: 8px; }
-    .fstep {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .fstep-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .fstep-info { flex: 1; }
-    .fstep-name { font-size: 11px; font-weight: 600; color: var(--white); }
-    .fstep-sub { font-size: 10px; color: var(--gray-400); }
-    .fstep-connector {
-      width: 1px;
-      height: 8px;
-      background: rgba(255,255,255,0.1);
-      margin-left: 15px;
-    }
-
-    /* Reply card */
-    .reply-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-    .reply-from { font-size: 11px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
-    .reply-role { font-size: 10px; color: var(--gray-400); margin-bottom: 8px; }
-    .reply-text { font-size: 12px; color: var(--gray-300); line-height: 1.5; font-style: italic; }
-
-    /* ─── CTA ─── */
-    .cta-section {
-      text-align: center;
-      padding: 80px 40px 100px;
-      background: linear-gradient(180deg, transparent, rgba(37,99,235,0.05));
-    }
-    .cta-section h2 { font-size: 40px; font-weight: 800; margin-bottom: 16px; }
-    .cta-section p { font-size: 16px; color: var(--gray-400); margin-bottom: 36px; }
-    .cta-buttons { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--blue);
-      color: var(--white);
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 15px;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .btn-primary:hover { background: var(--blue-dark); }
-    .btn-secondary {
-      background: rgba(255,255,255,0.07);
-      color: var(--white);
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 15px;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: background 0.2s;
-    }
-    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
-
-    @media (max-width: 768px) {
-      nav { padding: 0 20px; }
-      .nav-links { display: none; }
-      .hero { padding: 60px 20px 50px; }
-      .filters { padding: 0 20px 40px; }
-      .grid-section { padding: 0 20px 80px; }
-      .cards-grid { grid-template-columns: 1fr; }
-      .card.featured { grid-column: span 1; }
-      .card.featured .card-content { grid-template-columns: 1fr; }
-      .hero-stats { gap: 28px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jonathan Bayo, automation case studies</title>
+<meta name="description" content="Ten automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it.">
+<link rel="canonical" href="https://zilyn.github.io/case-studies/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jonathan Bayo, automation case studies">
+<meta property="og:description" content="Ten automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it.">
+<meta property="og:url" content="https://zilyn.github.io/case-studies/">
+<meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Jonathan<span>.</span>dev</div>
-  <ul class="nav-links">
-    <li><a href="#outreach">Outreach</a></li>
-    <li><a href="#intelligence">Intelligence</a></li>
-    <li><a href="#ai">AI Systems</a></li>
-    <li><a href="#ops">Ops</a></li>
-  </ul>
-  <a href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan" class="nav-cta">Book a Call</a>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">Automation Portfolio</div>
-  <h1>Real systems.<br><span class="highlight">Real results.</span></h1>
-  <p>10 automations built for founders, operators, and teams who want to get more done without hiring more people.</p>
-  <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-number">15<span>k+</span></div>
-      <div class="stat-label">Hours saved across projects</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">10<span>+</span></div>
-      <div class="stat-label">Automations built</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">91<span>%</span></div>
-      <div class="stat-label">Avg manual work eliminated</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">2<span>x</span></div>
-      <div class="stat-label">Avg team output increase</div>
-    </div>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
+    <nav class="top-nav" aria-label="Site">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#how">How I work</a>
+      <a href="index.html#contact">Contact</a>
+      <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
+    </nav>
   </div>
-</div>
+</header>
 
-<!-- FILTERS -->
-<div class="filters">
-  <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="outreach">Outreach</button>
-  <button class="filter-btn" data-filter="ai">AI</button>
-  <button class="filter-btn" data-filter="crm">CRM</button>
-  <button class="filter-btn" data-filter="ops">Operations</button>
-  <button class="filter-btn" data-filter="data">Data</button>
-</div>
-
-<!-- GRID -->
-<div class="grid-section">
-  <div class="section-label">Featured Builds</div>
-  <div class="cards-grid">
-
-    <!-- 1. FEATURED: LinkedIn Outreach System -->
-    <div class="card featured" data-category="outreach" data-href="linkedin-outreach.html" id="outreach">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(37,99,235,0.15);font-size:24px;">🎯</div>
-        <span class="card-status status-live">LIVE</span>
-      </div>
-      <div class="card-content">
-        <div>
-          <h3>LinkedIn Cold Outreach System</h3>
-          <p class="card-desc">A two-workflow pipeline that finds leads on LinkedIn, reads their recent posts, writes a personalized email using Claude AI, and sends it automatically. Built and running for my own business.</p>
-          <div class="metrics">
-            <div class="metric"><div class="metric-val green">91+</div><div class="metric-lab">Emails sent</div></div>
-            <div class="metric"><div class="metric-val blue">2</div><div class="metric-lab">Replies in 24h</div></div>
-            <div class="metric"><div class="metric-val amber">$3</div><div class="metric-lab">Cost per 100 leads</div></div>
-          </div>
-          <div class="flow">
-            <span class="flow-step">Apify Search</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Scrape Posts</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Claude AI</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Gmail Send</span><span class="flow-arrow">→</span>
-            <span class="flow-step">Sheets Log</span>
-          </div>
-          <div class="tags">
-            <span class="tag tag-blue">n8n</span>
-            <span class="tag tag-cyan">Apify</span>
-            <span class="tag tag-purple">Claude AI</span>
-            <span class="tag tag-green">Gmail</span>
-            <span class="tag tag-green">Google Sheets</span>
-          </div>
-          <div style="margin-top:20px;">
-            <div class="reply-card">
-              <div class="reply-from">Shane Martin — B Ventures</div>
-              <div class="reply-role">Fund Manager & Accelerator Founder</div>
-              <div class="reply-text">"Could you share more use cases and examples? I'm super curious about this."</div>
-            </div>
-            <div class="reply-card">
-              <div class="reply-from">Teddy White — Syntharos</div>
-              <div class="reply-role">Operations Lead, Fintech</div>
-              <div class="reply-text">Asked for resume + WhatsApp. Call booked within 24 hours.</div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="flowchart">
-            <div class="flowchart-title">Workflow 1 — LinkedIn Lead Scout</div>
-            <div class="flowchart-steps">
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(37,99,235,0.2);">🔍</div>
-                <div class="fstep-info"><div class="fstep-name">Apify LinkedIn Search</div><div class="fstep-sub">100-300 profiles per run</div></div>
-              </div>
-              <div class="fstep-connector"></div>
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(8,145,178,0.2);">📰</div>
-                <div class="fstep-info"><div class="fstep-name">Scrape Recent Posts</div><div class="fstep-sub">Last 5 LinkedIn posts per person</div></div>
-              </div>
-              <div class="fstep-connector"></div>
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(124,58,237,0.2);">🧠</div>
-                <div class="fstep-info"><div class="fstep-name">Claude Personalizes</div><div class="fstep-sub">Subject + body referencing real posts</div></div>
-              </div>
-              <div class="fstep-connector"></div>
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(5,150,105,0.2);">📊</div>
-                <div class="fstep-info"><div class="fstep-name">Save to Google Sheets</div><div class="fstep-sub">Full lead record + email copy</div></div>
-              </div>
-            </div>
-          </div>
-          <div style="height:12px;"></div>
-          <div class="flowchart">
-            <div class="flowchart-title">Workflow 2 — Outreach Engine</div>
-            <div class="flowchart-steps">
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(5,150,105,0.2);">📋</div>
-                <div class="fstep-info"><div class="fstep-name">Read Leads from Sheet</div><div class="fstep-sub">Filters status = "new" only</div></div>
-              </div>
-              <div class="fstep-connector"></div>
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(217,119,6,0.2);">⚡</div>
-                <div class="fstep-info"><div class="fstep-name">Filter & Cap at 100/day</div><div class="fstep-sub">Deduplicates by email</div></div>
-              </div>
-              <div class="fstep-connector"></div>
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(37,99,235,0.2);">✉️</div>
-                <div class="fstep-info"><div class="fstep-name">Send via Gmail</div><div class="fstep-sub">30s delay between each send</div></div>
-              </div>
-              <div class="fstep-connector"></div>
-              <div class="fstep">
-                <div class="fstep-icon" style="background:rgba(8,145,178,0.2);">✅</div>
-                <div class="fstep-info"><div class="fstep-name">Update Sheet Status</div><div class="fstep-sub">Marks "sent", never sends twice</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<main>
+  <section class="hero wrap">
+    <div class="hero-text">
+      <p class="eyebrow">Case studies</p>
+      <h1>I build automations that run on their own.</h1>
+      <p class="hero-lede">I'm Jonathan Bayo. I build lead research, outreach, CRM and reporting systems in n8n, Python and Claude for founders and small teams. Ten of them are below, with how each one runs and what came out of it.</p>
     </div>
+    <dl class="hero-facts">
+      <div><dt>Usual stack</dt><dd>n8n, Python, Claude, Supabase, Apify</dd></div>
+      <div><dt>Typical build</dt><dd>one to two weeks</dd></div>
+      <div><dt>Where things run</dt><dd>your own accounts and servers</dd></div>
+      <div><dt>Right now</dt><dd>taking new builds</dd></div>
+    </dl>
+  </section>
 
-    <!-- 2. AI Video Lead Generator -->
-    <div class="card" data-category="ai" data-href="video-generator.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(124,58,237,0.15);">🎬</div>
-        <span class="card-status status-client">CLIENT</span>
-      </div>
-      <h3>AI Personalized Video Generator</h3>
-      <p class="card-desc">Identifies high-priority leads from a database, writes a personalized video script using Claude, generates the video via Visla AI, and stores the video link — fully automated every 5 minutes.</p>
-      <div class="flow">
-        <span class="flow-step">Supabase</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Claude Script</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Visla Video</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Auto-deliver</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">5min</div><div class="metric-lab">Cycle time</div></div>
-        <div class="metric"><div class="metric-val blue">0</div><div class="metric-lab">Manual steps</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-purple">Claude AI</span>
-        <span class="tag tag-blue">Visla</span>
-        <span class="tag tag-cyan">Supabase</span>
-        <span class="tag tag-blue">n8n</span>
-      </div>
+  <section class="wrap work" id="work">
+    <div class="work-head">
+      <h2>The work</h2>
+      <div class="filters" role="group" aria-label="Filter by category"><button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All</button><button type="button" class="filter" data-filter="outreach" aria-pressed="false">Outreach</button><button type="button" class="filter" data-filter="intelligence" aria-pressed="false">Intelligence</button><button type="button" class="filter" data-filter="ai" aria-pressed="false">AI systems</button><button type="button" class="filter" data-filter="ops" aria-pressed="false">Operations</button></div>
     </div>
-
-    <!-- 3. Company Intelligence Monitor -->
-    <div class="card" id="intelligence" data-category="intelligence" data-href="company-monitor.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(217,119,6,0.15);">📡</div>
-        <span class="card-status status-client">CLIENT</span>
-      </div>
-      <h3>Company Intelligence Monitor</h3>
-      <p class="card-desc">Runs every Monday. Reads a list of target companies from Airtable, searches for new business signals using Tavily and Jina, scores them, and pushes hot leads straight into the CRM — no manual review needed.</p>
-      <div class="flow">
-        <span class="flow-step">Airtable</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Tavily Search</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Score</span><span class="flow-arrow">→</span>
-        <span class="flow-step">CRM Push</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">Weekly</div><div class="metric-lab">Auto-runs</div></div>
-        <div class="metric"><div class="metric-val blue">100%</div><div class="metric-lab">Hands-free</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-amber">Airtable</span>
-        <span class="tag tag-blue">Tavily</span>
-        <span class="tag tag-blue">Jina</span>
-        <span class="tag tag-green">GoHighLevel</span>
-      </div>
-    </div>
-
-    <!-- 4. CRM Auto-Push Pipeline -->
-    <div class="card" data-category="crm" data-href="crm-pipeline.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(5,150,105,0.15);">🔁</div>
-        <span class="card-status status-client">CLIENT</span>
-      </div>
-      <h3>CRM Lead Enrichment Pipeline</h3>
-      <p class="card-desc">Takes raw lead data from upstream workflows, uses Claude to generate an executive-level problem statement for each company, builds a full CRM payload with decision-maker info and urgency score, and pushes to GoHighLevel via webhook.</p>
-      <div class="flow">
-        <span class="flow-step">Lead Data</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Claude</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Enrich</span><span class="flow-arrow">→</span>
-        <span class="flow-step">GHL CRM</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">3s</div><div class="metric-lab">Per lead</div></div>
-        <div class="metric"><div class="metric-val blue">100%</div><div class="metric-lab">Auto-qualified</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-purple">Claude AI</span>
-        <span class="tag tag-green">GoHighLevel</span>
-        <span class="tag tag-blue">n8n</span>
-      </div>
-    </div>
-
-    <!-- 5. Google Maps Lead Scout -->
-    <div class="card" data-category="outreach" data-href="google-maps-leads.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(8,145,178,0.15);">🗺️</div>
-        <span class="card-status status-built">BUILT</span>
-      </div>
-      <h3>Google Maps Lead Discovery</h3>
-      <p class="card-desc">Searches Google Maps for local businesses in any niche, scrapes their websites for contact info, runs the data through Claude to extract company insights, and saves enriched leads to Google Sheets ready for outreach.</p>
-      <div class="flow">
-        <span class="flow-step">Google Places</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Web Scrape</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Claude Extract</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Sheets</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">500+</div><div class="metric-lab">Leads per run</div></div>
-        <div class="metric"><div class="metric-val amber">$0</div><div class="metric-lab">Per lead</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-cyan">Apify</span>
-        <span class="tag tag-purple">Claude AI</span>
-        <span class="tag tag-green">Google Sheets</span>
-      </div>
-    </div>
-
-    <!-- 6. RAG Knowledge Assistant -->
-    <div class="card" id="ai" data-category="ai" data-href="rag-assistant.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(124,58,237,0.15);">🧠</div>
-        <span class="card-status status-client">CLIENT</span>
-      </div>
-      <h3>Enterprise RAG Knowledge Assistant</h3>
-      <p class="card-desc">A secure internal AI assistant that lets employees ask questions about company documents, policies, and contracts — and get accurate answers with citations. Built on Weaviate vector database and Claude API.</p>
-      <div class="flow">
-        <span class="flow-step">PDF Ingest</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Weaviate</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Claude Q&A</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Citations</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">40%</div><div class="metric-lab">Fewer tickets</div></div>
-        <div class="metric"><div class="metric-val blue">~2s</div><div class="metric-lab">Response time</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-purple">Claude AI</span>
-        <span class="tag tag-blue">Weaviate</span>
-        <span class="tag tag-cyan">LangChain</span>
-        <span class="tag tag-green">Python</span>
-      </div>
-    </div>
-
-    <!-- 7. Recruitment Data Enrichment -->
-    <div class="card" data-category="data" data-href="recruitment-engine.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(37,99,235,0.15);">👥</div>
-        <span class="card-status status-client">CLIENT</span>
-      </div>
-      <h3>Recruitment Data Enrichment Engine</h3>
-      <p class="card-desc">Scrapes candidate profiles from LinkedIn and job boards, enriches them with public data, uses AI to classify skills and experience level, then pushes qualified candidates directly into the ATS with a fit score.</p>
-      <div class="flow">
-        <span class="flow-step">Apify Scrape</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Enrich</span><span class="flow-arrow">→</span>
-        <span class="flow-step">AI Score</span><span class="flow-arrow">→</span>
-        <span class="flow-step">ATS Push</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">90%</div><div class="metric-lab">Screening time cut</div></div>
-        <div class="metric"><div class="metric-val blue">32%</div><div class="metric-lab">Conversion lift</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-cyan">Apify</span>
-        <span class="tag tag-blue">Make.com</span>
-        <span class="tag tag-amber">Airtable</span>
-        <span class="tag tag-purple">OpenAI</span>
-      </div>
-    </div>
-
-    <!-- 8. Client Onboarding Automation -->
-    <div class="card" id="ops" data-category="ops" data-href="client-onboarding.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(5,150,105,0.15);">🤝</div>
-        <span class="card-status status-client">CLIENT</span>
-      </div>
-      <h3>Zero-Touch Client Onboarding</h3>
-      <p class="card-desc">When a new client signs, this workflow automatically generates their contract, sends it for e-signature, creates their project folder, sets up their Slack channel, and updates the CRM — all within 60 seconds of signing.</p>
-      <div class="flow">
-        <span class="flow-step">Form Submit</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Contract Gen</span><span class="flow-arrow">→</span>
-        <span class="flow-step">E-Sign</span><span class="flow-arrow">→</span>
-        <span class="flow-step">CRM + Slack</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">60s</div><div class="metric-lab">Full onboarding</div></div>
-        <div class="metric"><div class="metric-val blue">8hrs</div><div class="metric-lab">Saved per client</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-blue">n8n</span>
-        <span class="tag tag-green">DocuSign</span>
-        <span class="tag tag-pink">Slack</span>
-        <span class="tag tag-green">HubSpot</span>
-      </div>
-    </div>
-
-    <!-- 9. Investor LP Report Automation -->
-    <div class="card" data-category="ops" data-href="investor-reports.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(217,119,6,0.15);">📈</div>
-        <span class="card-status status-built">BUILT</span>
-      </div>
-      <h3>Investor LP Report Automation</h3>
-      <p class="card-desc">Pulls portfolio metrics from spreadsheets each month, formats them into a clean branded report, and sends personalized LP update emails automatically. No more copy-pasting numbers or formatting reports manually.</p>
-      <div class="flow">
-        <span class="flow-step">Sheets Pull</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Format Report</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Personalize</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Send Email</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">20hrs</div><div class="metric-lab">Saved monthly</div></div>
-        <div class="metric"><div class="metric-val blue">100%</div><div class="metric-lab">On-time sends</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-green">Google Sheets</span>
-        <span class="tag tag-blue">n8n</span>
-        <span class="tag tag-green">Gmail</span>
-        <span class="tag tag-purple">Claude AI</span>
-      </div>
-    </div>
-
-    <!-- 10. Event Follow-Up Engine -->
-    <div class="card" data-category="ops" data-href="event-followup.html">
-      <div class="card-top">
-        <div class="card-icon" style="background:rgba(219,39,119,0.15);">🎪</div>
-        <span class="card-status status-built">BUILT</span>
-      </div>
-      <h3>Event Follow-Up Engine</h3>
-      <p class="card-desc">After any event, attendee data flows in automatically. Within 24 hours, every attendee gets a personalized follow-up based on which sessions they attended and what they said at the event. No one falls through the cracks.</p>
-      <div class="flow">
-        <span class="flow-step">Event Data</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Segment</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Personalize</span><span class="flow-arrow">→</span>
-        <span class="flow-step">Send</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-val green">24hr</div><div class="metric-lab">Follow-up time</div></div>
-        <div class="metric"><div class="metric-val blue">0</div><div class="metric-lab">Leads missed</div></div>
-      </div>
-      <div class="tags">
-        <span class="tag tag-blue">n8n</span>
-        <span class="tag tag-purple">Claude AI</span>
-        <span class="tag tag-green">Gmail</span>
-        <span class="tag tag-amber">Airtable</span>
-      </div>
-    </div>
-
+    <p class="legend"><span class="legend-item"><span class="status status-live">Live</span> running for my own business right now</span> <span class="legend-item"><span class="status status-client">Client</span> built for a client and handed over</span> <span class="legend-item"><span class="status status-built">Built</span> a working system that proves the pattern, not deployed for a client yet</span></p>
+    <div class="entries">
+<article class="entry featured" data-cat="outreach" data-href="linkedin-outreach.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-live">Live</span></div>
+    <h3 class="entry-title"><a href="linkedin-outreach.html">LinkedIn cold outreach system</a></h3>
+    <p class="entry-one">Finds people on LinkedIn, reads their recent posts, writes each of them a short email with Claude and sends it. Running for my own business.</p>
+    <p class="entry-stack">n8n · Apify (LinkedIn search, post scraper) · Claude API · Gmail · Google Sheets · Python</p>
   </div>
-</div>
-
-<!-- CTA -->
-<div class="cta-section">
-  <h2>Want something like this<br>built for you?</h2>
-  <p>Tell me what's taking too long in your workflow. Most things can be automated in a week.</p>
-  <div class="cta-buttons">
-    <a href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan" class="btn-primary">Book a 15-min Call</a>
-    <a href="mailto:bayoadegokeiyanu@gmail.com" class="btn-secondary">Send me a message</a>
+  <div class="entry-side"><div class="fact"><span class="fact-val">91</span><span class="fact-lab">emails sent, first run</span></div><div class="fact"><span class="fact-val">2</span><span class="fact-lab">replies in 24 hours</span></div><div class="fact"><span class="fact-val">$3</span><span class="fact-lab">per 100 leads</span></div><span class="entry-more">Read the case study</span></div>
+  <div class="entry-wide">
+    <figure class="canvas"><figcaption class="canvas-title">Workflow 1. Lead scout</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Apify search</div><div class="node-sub">LinkedIn profiles, up to 300</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter</div><div class="node-sub">dupes, excluded companies, no email</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Scrape posts</div><div class="node-sub">last 5 posts per person</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">subject and body from real posts</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Google Sheets</div><div class="node-sub">full lead record</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Workflow 2. Outreach engine</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Daily run</div><div class="node-sub">reads the sheet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter new</div><div class="node-sub">cap at 100 a day</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Gmail</div><div class="node-sub">30 s between sends</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Mark sent</div><div class="node-sub">never emails twice</div></div></div></figure>
+    <div class="replies"><div class="replies-title">Replies from the first run</div><blockquote class="reply"><p>Could you share more use cases and examples? I&#x27;m super curious about this.</p><footer>Shane Martin, Fund manager and accelerator founder, B Ventures</footer></blockquote><blockquote class="reply"><p>Asked for a resume and a WhatsApp number. Call booked within 24 hours.</p><footer>Teddy White, Operations lead, Syntharos</footer></blockquote></div>
   </div>
-</div>
+</article>
+<article class="entry" data-cat="ai" data-href="video-generator.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="video-generator.html">Personalized video generator</a></h3>
+    <p class="entry-one">Picks the highest priority leads from Supabase, has Claude write a 45 second script, sends it to Visla to render and saves the video link back on the lead.</p>
+    <p class="entry-stack">n8n · Claude API · Visla API · Supabase · HMAC auth</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">5 min</span><span class="fact-lab">cycle time</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual steps</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="intelligence" data-href="company-monitor.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="company-monitor.html">Company intelligence monitor</a></h3>
+    <p class="entry-one">Every Monday it reads a list of target companies, searches for fresh signals like funding, hiring and leadership changes, scores them and pushes the hot ones into the CRM.</p>
+    <p class="entry-stack">n8n · Airtable · Tavily search · Jina search · GoHighLevel</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">Mon 06:00</span><span class="fact-lab">weekly run</span></div><div class="fact"><span class="fact-val">200+</span><span class="fact-lab">companies watched</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="intelligence" data-href="crm-pipeline.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="crm-pipeline.html">CRM lead enrichment pipeline</a></h3>
+    <p class="entry-one">Takes a scored lead from the monitor, has Claude write a two sentence problem statement for the company, builds the full CRM record and pushes it to GoHighLevel. About three seconds a lead.</p>
+    <p class="entry-stack">n8n · Claude API · GoHighLevel · Webhooks · JavaScript code nodes</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">~3 s</span><span class="fact-lab">per lead</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual entry</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="outreach" data-href="google-maps-leads.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-built">Built</span></div>
+    <h3 class="entry-title"><a href="google-maps-leads.html">Google Maps lead discovery</a></h3>
+    <p class="entry-one">Searches Google Maps for a business type in a city, scrapes each website for contact details, has Claude pull out what the business does and writes a clean lead list to Google Sheets.</p>
+    <p class="entry-stack">n8n · Apify (Google Places) · Python · Claude API · Google Sheets</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">500+</span><span class="fact-lab">leads a run</span></div><div class="fact"><span class="fact-val">~80%</span><span class="fact-lab">email find rate</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="ai" data-href="rag-assistant.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="rag-assistant.html">Internal knowledge assistant</a></h3>
+    <p class="entry-one">Staff ask a plain question about company documents, policies and contracts and get an answer with the source cited. Runs on the company&#x27;s own servers.</p>
+    <p class="entry-stack">Python (FastAPI) · Weaviate · LangChain · Claude API · Docker · AWS EC2</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">~2 s</span><span class="fact-lab">per answer</span></div><div class="fact"><span class="fact-val">40%</span><span class="fact-lab">fewer tickets, reported</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="intelligence" data-href="recruitment-engine.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="recruitment-engine.html">Recruitment enrichment engine</a></h3>
+    <p class="entry-one">Scrapes candidate profiles for a role, enriches them with public data, scores fit against the job with AI and pushes only the qualified ones into Airtable with a summary for the recruiter.</p>
+    <p class="entry-stack">Make.com · Apify · OpenAI API · Airtable · Slack</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">500+</span><span class="fact-lab">candidates a day</span></div><div class="fact"><span class="fact-val">40%</span><span class="fact-lab">reach a human</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="ops" data-href="client-onboarding.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Operations</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="client-onboarding.html">Zero touch client onboarding</a></h3>
+    <p class="entry-one">A signed form kicks off the contract, the e-signature, the project folder, the Slack channel, the CRM deal and the welcome email. About 60 seconds, no hand offs.</p>
+    <p class="entry-stack">n8n · Google Forms · DocuSign · Google Drive · Slack · HubSpot · Gmail</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">~60 s</span><span class="fact-lab">end to end</span></div><div class="fact"><span class="fact-val">~8 h</span><span class="fact-lab">saved per client</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="ops" data-href="investor-reports.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Operations</span><span class="status status-built">Built</span></div>
+    <h3 class="entry-title"><a href="investor-reports.html">Investor report automation</a></h3>
+    <p class="entry-one">On the first of the month it pulls portfolio numbers from Sheets, has Claude write the month&#x27;s narrative, builds each investor&#x27;s report with their own allocation and sends it.</p>
+    <p class="entry-stack">n8n · Google Sheets · Claude API · Gmail</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">1st</span><span class="fact-lab">of every month</span></div><div class="fact"><span class="fact-val">~20 h</span><span class="fact-lab">saved a month</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="outreach" data-href="event-followup.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-built">Built</span></div>
+    <h3 class="entry-title"><a href="event-followup.html">Event follow up engine</a></h3>
+    <p class="entry-one">After an event, every attendee gets a follow up within 24 hours that refers to the sessions they actually attended. The most engaged ones get flagged for a personal call.</p>
+    <p class="entry-stack">n8n · Claude API · Gmail · Airtable · Webhooks</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">24 h</span><span class="fact-lab">follow up window</span></div><div class="fact"><span class="fact-val">300+</span><span class="fact-lab">attendees an event</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+    </div>
+    <p class="empty" id="empty" hidden>Nothing in this category yet.</p>
+  </section>
 
+  <section class="wrap how" id="how">
+    <h2>How I work</h2>
+    <div class="how-cols">
+      <p>We start with what's taking too long. I map the steps, pick the smallest system that removes them and build it in n8n or Python, with Claude where a step needs judgment.</p>
+      <p>Everything I build logs its own runs, never sends the same thing twice and fails loudly instead of quietly. You get the workflows, the credentials in your own accounts and a short doc on how it runs and what to do when it stops.</p>
+      <p>Most builds take a week or two. If it's going to take longer I'll say so before we start.</p>
+    </div>
+  </section>
 
-<script>
-const btns = document.querySelectorAll('.filter-btn');
-const cards = document.querySelectorAll('.card[data-category]');
-btns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    btns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.filter;
-    cards.forEach(card => {
-      if (cat === 'all' || card.dataset.category.includes(cat)) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  });
-});
-// Make cards clickable
-document.querySelectorAll('.card[data-href]').forEach(card => {
-  card.style.cursor = 'pointer';
-  card.addEventListener('click', e => {
-    if (!e.target.closest('a')) window.location.href = card.dataset.href;
-  });
-});
-</script>
-
-
-<script>
-// Filter buttons
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.filter;
-    document.querySelectorAll('.card[data-category]').forEach(card => {
-      if (cat === 'all' || card.dataset.category.includes(cat)) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  });
-});
-
-// Clickable cards
-document.querySelectorAll('.card[data-href]').forEach(card => {
-  card.addEventListener('click', e => {
-    if (!e.target.closest('a')) window.location.href = card.dataset.href;
-  });
-});
-</script>
-
+  <section class="wrap cta" id="contact">
+    <h2>Want something like this built?</h2>
+    <p>Tell me what's taking too long. Most things can be built in a week or two.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a 15 minute call</a>
+      <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap foot-row">
+    <span>Jonathan Bayo</span>
+    <span><a href="mailto:bayoadegokeiyanu@gmail.com">bayoadegokeiyanu@gmail.com</a></span>
+    <span><a href="https://github.com/zilyn">github.com/zilyn</a></span>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
 </body>
 </html>
