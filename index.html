@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jonathan Bayo, automation case studies</title>
-<meta name="description" content="Ten automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it.">
+<meta name="description" content="Fourteen automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it.">
 <link rel="canonical" href="https://zilyn.github.io/case-studies/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Jonathan Bayo, automation case studies">
-<meta property="og:description" content="Ten automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it.">
+<meta property="og:description" content="Fourteen automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it.">
 <meta property="og:url" content="https://zilyn.github.io/case-studies/">
 <meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
@@ -38,7 +38,7 @@
     <div class="hero-text">
       <p class="eyebrow">Case studies</p>
       <h1>I build automations that run on their own.</h1>
-      <p class="hero-lede">I'm Jonathan Bayo. I build lead research, outreach, CRM and reporting systems in n8n, Python and Claude for founders and small teams. Ten of them are below, with how each one runs and what came out of it.</p>
+      <p class="hero-lede">I'm Jonathan Bayo. I build lead research, outreach, CRM and reporting systems in n8n, Python and Claude for founders and small teams. Fourteen of them are below, with how each one runs and what came out of it.</p>
     </div>
     <dl class="hero-facts">
       <div><dt>Usual stack</dt><dd>n8n, Python, Claude, Supabase, Apify</dd></div>
@@ -51,7 +51,7 @@
   <section class="wrap work" id="work">
     <div class="work-head">
       <h2>The work</h2>
-      <div class="filters" role="group" aria-label="Filter by category"><button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All</button><button type="button" class="filter" data-filter="outreach" aria-pressed="false">Outreach</button><button type="button" class="filter" data-filter="intelligence" aria-pressed="false">Intelligence</button><button type="button" class="filter" data-filter="ai" aria-pressed="false">AI systems</button><button type="button" class="filter" data-filter="ops" aria-pressed="false">Operations</button></div>
+      <div class="filters" role="group" aria-label="Filter by category"><button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All</button><button type="button" class="filter" data-filter="outreach" aria-pressed="false">Outreach</button><button type="button" class="filter" data-filter="intelligence" aria-pressed="false">Intelligence</button><button type="button" class="filter" data-filter="ai" aria-pressed="false">AI systems</button><button type="button" class="filter" data-filter="ops" aria-pressed="false">Operations</button><button type="button" class="filter" data-filter="product" aria-pressed="false">Product</button></div>
     </div>
     <p class="legend"><span class="legend-item"><span class="status status-live">Live</span> running for my own business right now</span> <span class="legend-item"><span class="status status-client">Client</span> built for a client and handed over</span> <span class="legend-item"><span class="status status-built">Built</span> a working system that proves the pattern, not deployed for a client yet</span></p>
     <div class="entries">
@@ -67,6 +67,42 @@
     <figure class="canvas"><figcaption class="canvas-title">Workflow 1. Lead scout</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Apify search</div><div class="node-sub">LinkedIn profiles, up to 300</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter</div><div class="node-sub">dupes, excluded companies, no email</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Scrape posts</div><div class="node-sub">last 5 posts per person</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">subject and body from real posts</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Google Sheets</div><div class="node-sub">full lead record</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Workflow 2. Outreach engine</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Daily run</div><div class="node-sub">reads the sheet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter new</div><div class="node-sub">cap at 100 a day</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Gmail</div><div class="node-sub">30 s between sends</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Mark sent</div><div class="node-sub">never emails twice</div></div></div></figure>
     <div class="replies"><div class="replies-title">Replies from the first run</div><blockquote class="reply"><p>Could you share more use cases and examples? I&#x27;m super curious about this.</p><footer>Shane Martin, Fund manager and accelerator founder, B Ventures</footer></blockquote><blockquote class="reply"><p>Asked for a resume and a WhatsApp number. Call booked within 24 hours.</p><footer>Teddy White, Operations lead, Syntharos</footer></blockquote></div>
   </div>
+</article>
+<article class="entry" data-cat="intelligence" data-href="buyer-intent-pipeline.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="buyer-intent-pipeline.html">Buyer intent research pipeline</a></h3>
+    <p class="entry-one">A nightly system of 28 n8n workflows that finds buying signals across the web, turns them into scored, tiered companies with verified contacts, and feeds a sales CRM. Built over a year for a B2B sales intelligence company.</p>
+    <p class="entry-stack">n8n · Supabase (Postgres) · Claude API · Tavily · Apollo · NeverBounce · Twilio Lookup · Prospeo · JavaScript · Python</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">28</span><span class="fact-lab">workflows, nightly</span></div><div class="fact"><span class="fact-val">3,300</span><span class="fact-lab">companies tracked</span></div><div class="fact"><span class="fact-val">2,800+</span><span class="fact-lab">emails verified</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="product" data-href="signals-saas.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Product</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="signals-saas.html">Multi-tenant buyer intent product</a></h3>
+    <p class="entry-one">Took the client&#x27;s demo screens and built them into a real multi-tenant SaaS in three weeks: own auth, invites and roles, one data lake with row level isolation, a release gate, fail-soft behaviour and an in-app assistant.</p>
+    <p class="entry-stack">Python · Supabase (Postgres, RLS) · Docker · Traefik · Claude API (Sonnet) · Playwright · GitHub Actions · n8n</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">3 wks</span><span class="fact-lab">demo to MVP</span></div><div class="fact"><span class="fact-val">29/29</span><span class="fact-lab">isolation checks</span></div><div class="fact"><span class="fact-val">0.5.0</span><span class="fact-lab">releases shipped</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="ai" data-href="crm-assistant.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="crm-assistant.html">In-CRM AI assistant</a></h3>
+    <p class="entry-one">A chat assistant inside the client&#x27;s CRM that answers questions about the pipeline from live data across 23 tables, logs issues and runs a few safe actions. Rebuilt for accuracy from 4 of 9 right to 13 of 13.</p>
+    <p class="entry-stack">Python · Claude API (Opus) · Supabase (Postgres) · Docker · Prompt caching</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">13/13</span><span class="fact-lab">eval, was 4/9</span></div><div class="fact"><span class="fact-val">23</span><span class="fact-lab">tables it can read</span></div><div class="fact"><span class="fact-val">~$1</span><span class="fact-lab">a month to run</span></div><span class="entry-more">Read the case study</span></div>
+</article>
+<article class="entry" data-cat="ops" data-href="workflow-sentinel.html">
+  <div class="entry-main">
+    <div class="entry-eyebrow"><span class="cat">Operations</span><span class="status status-client">Client</span></div>
+    <h3 class="entry-title"><a href="workflow-sentinel.html">Workflow watchdog and uptime monitor</a></h3>
+    <p class="entry-one">A daily n8n job that checks every other workflow, tells a stall from a weekly schedule, re-fires what it can, flags what needs money, and only emails a person when it can&#x27;t fix the problem itself.</p>
+    <p class="entry-stack">n8n · n8n public API · Supabase · Microsoft Graph mail · GitHub Actions</p>
+  </div>
+  <div class="entry-side"><div class="fact"><span class="fact-val">Daily</span><span class="fact-lab">checks 28 workflows</span></div><div class="fact"><span class="fact-val">5 min</span><span class="fact-lab">uptime probe</span></div><span class="entry-more">Read the case study</span></div>
 </article>
 <article class="entry" data-cat="ai" data-href="video-generator.html">
   <div class="entry-main">

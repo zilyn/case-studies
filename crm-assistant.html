@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>In-CRM AI assistant, Jonathan Bayo</title>
+<meta name="description" content="A chat assistant inside the client&#x27;s CRM that answers questions about the pipeline from live data across 23 tables, logs issues and runs a few safe actions. Rebuilt for accuracy from 4 of 9 right to 13 of 13.">
+<link rel="canonical" href="https://zilyn.github.io/case-studies/crm-assistant.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="In-CRM AI assistant, Jonathan Bayo">
+<meta property="og:description" content="A chat assistant inside the client&#x27;s CRM that answers questions about the pipeline from live data across 23 tables, logs issues and runs a few safe actions. Rebuilt for accuracy from 4 of 9 right to 13 of 13.">
+<meta property="og:url" content="https://zilyn.github.io/case-studies/crm-assistant.html">
+<meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
+    <nav class="top-nav" aria-label="Site">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#how">How I work</a>
+      <a href="index.html#contact">Contact</a>
+      <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article wrap">
+  <a class="back" href="index.html#work">All case studies</a>
+  <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span></div>
+  <h1>In-CRM AI assistant</h1>
+  <p class="lede">The client&#x27;s sales team wanted to ask the CRM questions in plain English: what&#x27;s in the pipeline, who at this company have we spoken to, which deals are stuck. The first version answered confidently and was wrong almost half the time. The rebuild is what this case study is about.</p>
+
+  <dl class="facts"><div><dt>Model</dt><dd>Claude Opus in a tool loop</dd></div><div><dt>Data</dt><dd>23 CRM tables, read only</dd></div><div><dt>Eval</dt><dd>13 of 13, including traps</dd></div><div><dt>Cost</dt><dd>about a dollar a month</dd></div></dl>
+
+  <section class="sec">
+    <h2>Why it exists</h2>
+    <p>The first version ran on a small model with one read tool that returned 100 rows. Asked for the pipeline total it summed one page and invented the rest, off by $600k. Asked about a live Tier 1 account it said the company wasn&#x27;t in the system. Asked about a field that shipped the week before it said the field didn&#x27;t exist. All three answers sounded certain.</p>
+  </section>
+
+  <section class="sec sec-wide">
+    <h2>How it runs</h2>
+    <figure class="canvas"><figcaption class="canvas-title">One question</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Question</div><div class="node-sub">in the CRM widget</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">plans the lookups</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">search_crm</div><div class="node-sub">name, domain, ticker</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">aggregate_rows</div><div class="node-sub">totals in Python</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">list_columns</div><div class="node-sub">live schema</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Answer</div><div class="node-sub">plain language, no dashes</div></div></div></figure>
+    <ol class="steps"><li><h3>Stronger model, own setting</h3><p>The assistant runs on Claude Opus with its own model constant. Reply classification and social drafts stay on the cheap model. The two are deliberately separate.</p></li><li><h3>Search that finds things</h3><p>A search tool that tries the full phrase, the phrase with spaces removed and the longest words, across name, domain and ticker. That&#x27;s what finds a company whose row is named differently from how people say it.</p></li><li><h3>Totals in Python</h3><p>Sums, counts and breakdowns page through every row in Python and hand the model a number. The model never adds rows itself.</p></li><li><h3>Facts from the data</h3><p>The prompt used to hardcode thresholds and a column list, both stale. Now it reads the config table and asks the database for the live schema.</p></li><li><h3>Prompt caching</h3><p>Everything per request, the user, the date, the open record, rides on the user turn instead of the system prompt, so about 20,000 tokens a turn come from cache.</p></li><li><h3>Eval</h3><p>Thirteen real questions with answers checked against paged database queries, including a fake company that must come back as not found.</p></li></ol>
+  </section>
+
+  <section class="sec">
+    <h2>What came out of it</h2>
+    <p>Thirteen of thirteen on the eval, including the adversarial cases. The pipeline total matches the database to the dollar. The whole thing costs about a dollar a month to run because of the caching.</p>
+    <div class="fact-row"><div class="fact"><span class="fact-val">13/13</span><span class="fact-lab">correct, was 4/9</span></div><div class="fact"><span class="fact-val">23</span><span class="fact-lab">tables, was 12</span></div><div class="fact"><span class="fact-val">20k</span><span class="fact-lab">tokens a turn from cache</span></div><div class="fact"><span class="fact-val">~$1</span><span class="fact-lab">a month</span></div></div>
+    
+  </section>
+
+  <section class="sec">
+    <h2>Notes</h2>
+    <p>My own first set of ground truth answers was wrong for the same reason the bot was: Supabase&#x27;s REST layer caps a response at 1,000 rows and says nothing. The fix is the same in both places, page it or read the count off the header. Two tables that hold credentials are excluded from the assistant on purpose.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Stack</h2>
+    <ul class="stack"><li>Python</li><li>Claude API (Opus)</li><li>Supabase (Postgres)</li><li>Docker</li><li>Prompt caching</li></ul>
+  </section>
+
+  <section class="cta cta-article" id="contact">
+    <h2>Want something like this built?</h2>
+    <p>Tell me what you're trying to automate. Most things can be built in a week or two.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a 15 minute call</a>
+      <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap foot-row">
+    <span>Jonathan Bayo</span>
+    <span><a href="mailto:bayoadegokeiyanu@gmail.com">bayoadegokeiyanu@gmail.com</a></span>
+    <span><a href="https://github.com/zilyn">github.com/zilyn</a></span>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

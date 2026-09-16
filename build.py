@@ -19,6 +19,7 @@ CATS = {
     "intelligence": "Intelligence",
     "ai": "AI systems",
     "ops": "Operations",
+    "product": "Product",
 }
 STATUS = {
     "live": ("Live", "running for my own business right now"),
@@ -77,6 +78,168 @@ PROJECTS = [
             "Two replies from 91 sends is a small sample, so I'm not calling it a reply rate yet. The 30 second spacing and the daily cap are what keep the Gmail account safe. The search step is the part that needs the most care, because LinkedIn limits how much you can pull.",
         ],
         stack=["n8n", "Apify (LinkedIn search, post scraper)", "Claude API", "Gmail", "Google Sheets", "Python"],
+    ),
+    dict(
+        slug="buyer-intent-pipeline",
+        title="Buyer intent research pipeline",
+        cat="intelligence",
+        status="client",
+        one="A nightly system of 28 n8n workflows that finds buying signals across the web, turns them into scored, tiered companies with verified contacts, and feeds a sales CRM. Built over a year for a B2B sales intelligence company.",
+        lede="This started as the weekly company monitor and grew into the whole back end of a sales intelligence business. Collectors find signals, an orchestrator turns them into companies and scores them, enrichers add people and firmographics, verifiers check every email and phone, and a weekly loop re-researches the companies that went quiet. It all runs overnight.",
+        index_facts=[("28", "workflows, nightly"), ("3,300", "companies tracked"), ("2,800+", "emails verified")],
+        facts=[("Runs", "nightly, 28 n8n workflows"), ("Companies", "about 3,300, 900 in the top two tiers"), ("Contacts", "4,000+, every email checked"), ("Client", "B2B sales intelligence company")],
+        why=[
+            "The client sells to companies that are about to spend on AI and consulting. The signal that they're about to spend shows up in the news, in hiring, in filings and on company sites, but nobody can read all of that for thousands of companies. The first version watched 200 companies once a week. The client wanted every company they might ever sell to, scored every night, with someone to call.",
+        ],
+        canvases=[
+            dict(title="Every night", nodes=[
+                ("trigger", "Collectors", "Tavily, filings, news, hiring"),
+                ("transform", "Orchestrator", "signal to company, dedupe"),
+                ("transform", "Score", "deterministic tiers"),
+                ("ai", "Claude", "description, fit, problem"),
+                ("fetch", "Enrich", "domain, firmographics, people"),
+                ("fetch", "Verify", "email and phone"),
+                ("store", "Supabase", "CRM reads it"),
+            ]),
+            dict(title="Every week", nodes=[
+                ("trigger", "Monday", "stuck companies"),
+                ("fetch", "Re-research", "biggest first"),
+                ("transform", "Classify", "new signals"),
+                ("store", "Re-score", "next night"),
+            ]),
+        ],
+        steps=[
+            ("Collect", "Several collectors search for signals: funding, layoffs, leadership changes, AI initiatives, regulatory pressure, new hires. Each signal is stored with its source and date."),
+            ("Match", "The orchestrator matches every signal to a company, creates the company if it's new and drops duplicates. A name quality gate stops headline fragments from becoming companies, which was the biggest source of junk early on."),
+            ("Score", "Scoring is plain JavaScript, not a model, so the same evidence always scores the same way. Companies land in four tiers from Tier 1 to Discard, and the tier drives everything downstream."),
+            ("Describe", "Claude writes the description, the fit against the client's offerings and a short problem statement for each company in the top tiers."),
+            ("Enrich", "A resolver finds the company domain, then Apollo adds decision makers for 75 companies a night, highest tier first. Domain coverage for the top tiers went from 75% to 97%."),
+            ("Verify", "Every new contact goes through NeverBounce for the email and Twilio for the phone line type, plus checks against LinkedIn, the company site, GitHub and the domain's mail records. 350 contacts a night."),
+            ("Re-research", "Companies that scored well but went quiet get re-searched every Monday, biggest first, because the small ones return nothing but generic headlines."),
+            ("Draft", "For companies that clear the bar, Claude drafts an outreach sequence and a QA gate checks every claim in it before a person sees it."),
+        ],
+        outcome=[
+            "The client's team opens the CRM in the morning and the night's work is there: new companies, tiers, people with checked emails and a reason to call. About 3,300 companies are tracked, 900 or so sit in the top two tiers, and 2,800 plus emails have been validated. A cleanup in August took 64 workflows down to 28 without losing a function.",
+        ],
+        outcome_facts=[("3,300", "companies tracked"), ("900", "in the top two tiers"), ("4,000+", "contacts"), ("97%", "domain coverage, top tiers")],
+        notes=[
+            "The expensive lesson: Supabase's REST layer silently caps a response at 1,000 rows. One background worker read its done list unpaged, the list crossed 1,000, and it regenerated the same work every two minutes for five weeks. That was about half of one month's API bill. Every worker that calls a paid API now pages its reads, caps its attempts per day and logs its usage.",
+            "The other lesson is that signal discovery is not the same as per company research. A company nobody writes about never improves its score on its own, which is why the weekly re-research loop exists.",
+        ],
+        stack=["n8n", "Supabase (Postgres)", "Claude API", "Tavily", "Apollo", "NeverBounce", "Twilio Lookup", "Prospeo", "JavaScript", "Python"],
+    ),
+    dict(
+        slug="signals-saas",
+        title="Multi-tenant buyer intent product",
+        cat="product",
+        status="client",
+        one="Took the client's demo screens and built them into a real multi-tenant SaaS in three weeks: own auth, invites and roles, one data lake with row level isolation, a release gate, fail-soft behaviour and an in-app assistant.",
+        lede="The sales intelligence client wanted to sell the signals as a product, not a service. In three weeks the demo screens became a tenant app with accounts, workspaces, invites, roles, trials, an isolation harness that runs before every release, and an assistant that answers questions about the workspace's own data.",
+        index_facts=[("3 wks", "demo to MVP"), ("29/29", "isolation checks"), ("0.5.0", "releases shipped")],
+        facts=[("Built", "three weeks, demo to MVP"), ("Tenancy", "one lake, org id on every row, RLS backstop"), ("Isolation", "29 checks, run before every release"), ("Client", "B2B sales intelligence company")],
+        why=[
+            "The pipeline above produced the data. The client needed other companies to be able to log in and see only their own slice of it, invite their team, rate signals and get a brief, without any of it leaking across workspaces. And it had to be demoable to partners in under two weeks.",
+        ],
+        canvases=[dict(title="Request path", nodes=[
+            ("trigger", "Browser", "session cookie"),
+            ("transform", "App", "Python, own container"),
+            ("transform", "Policy", "org membership, role"),
+            ("fetch", "Supabase", "per request JWT, RLS"),
+            ("ai", "Ask", "Sonnet, ten scoped tools"),
+            ("store", "Audit", "every write logged"),
+        ])],
+        steps=[
+            ("Auth", "Extended the client's existing password auth rather than adding a vendor: invites and resets by email, sessions with a version number so a revoke logs everyone out, a 90 day hard cap, roles per workspace."),
+            ("Tenancy", "Every row carries the workspace id. The app injects it server side on every query, and as a second line the database enforces row level security with a token minted per request. Both were proven at the database: the right workspace reads its rows, a bogus one gets nothing, a forged token gets a 401."),
+            ("Isolation harness", "29 HTTP checks that try to read across workspaces as a stranger, a member, an admin and a former member. It runs before every release and has to be green."),
+            ("Release gate", "A scripted browser walk through the product, a dependency scan and the harness. A release that fails any of them doesn't ship. Five releases went through it in the first three weeks."),
+            ("Fail soft", "Built during a live database incident. Store errors show a one moment page instead of a broken product, the dataset is served stale while a refresh runs in the background, and a disk copy survives a restart. Two uptime monitors watch it, one inside the box and one on GitHub."),
+            ("Ask", "An assistant inside the app on Claude Sonnet with ten read only tools that only see the workspace's own data. Twenty questions an hour per person, sixty a day per workspace, thirteen out of thirteen on the eval."),
+        ],
+        outcome=[
+            "The product went from a set of demo boards to release 0.5.0 on production in three weeks, with the partner demo made and testers on a staging copy. A stress run of 300 concurrent requests came back with no errors and isolation held.",
+        ],
+        outcome_facts=[("3 wks", "demo to MVP"), ("0.5.0", "on production"), ("29/29", "isolation checks"), ("300", "requests, 0 errors")],
+        notes=[
+            "The whole app is Python standard library, no framework, which the client's ops setup made the right call. One thing that bit: with strict tool schemas where every field is required, Sonnet fills the fields it doesn't need with fragments of its own tool markup. Optional fields are nullable now and inputs are scrubbed.",
+        ],
+        stack=["Python", "Supabase (Postgres, RLS)", "Docker", "Traefik", "Claude API (Sonnet)", "Playwright", "GitHub Actions", "n8n"],
+    ),
+    dict(
+        slug="crm-assistant",
+        title="In-CRM AI assistant",
+        cat="ai",
+        status="client",
+        one="A chat assistant inside the client's CRM that answers questions about the pipeline from live data across 23 tables, logs issues and runs a few safe actions. Rebuilt for accuracy from 4 of 9 right to 13 of 13.",
+        lede="The client's sales team wanted to ask the CRM questions in plain English: what's in the pipeline, who at this company have we spoken to, which deals are stuck. The first version answered confidently and was wrong almost half the time. The rebuild is what this case study is about.",
+        index_facts=[("13/13", "eval, was 4/9"), ("23", "tables it can read"), ("~$1", "a month to run")],
+        facts=[("Model", "Claude Opus in a tool loop"), ("Data", "23 CRM tables, read only"), ("Eval", "13 of 13, including traps"), ("Cost", "about a dollar a month")],
+        why=[
+            "The first version ran on a small model with one read tool that returned 100 rows. Asked for the pipeline total it summed one page and invented the rest, off by $600k. Asked about a live Tier 1 account it said the company wasn't in the system. Asked about a field that shipped the week before it said the field didn't exist. All three answers sounded certain.",
+        ],
+        canvases=[dict(title="One question", nodes=[
+            ("trigger", "Question", "in the CRM widget"),
+            ("ai", "Claude", "plans the lookups"),
+            ("fetch", "search_crm", "name, domain, ticker"),
+            ("transform", "aggregate_rows", "totals in Python"),
+            ("fetch", "list_columns", "live schema"),
+            ("send", "Answer", "plain language, no dashes"),
+        ])],
+        steps=[
+            ("Stronger model, own setting", "The assistant runs on Claude Opus with its own model constant. Reply classification and social drafts stay on the cheap model. The two are deliberately separate."),
+            ("Search that finds things", "A search tool that tries the full phrase, the phrase with spaces removed and the longest words, across name, domain and ticker. That's what finds a company whose row is named differently from how people say it."),
+            ("Totals in Python", "Sums, counts and breakdowns page through every row in Python and hand the model a number. The model never adds rows itself."),
+            ("Facts from the data", "The prompt used to hardcode thresholds and a column list, both stale. Now it reads the config table and asks the database for the live schema."),
+            ("Prompt caching", "Everything per request, the user, the date, the open record, rides on the user turn instead of the system prompt, so about 20,000 tokens a turn come from cache."),
+            ("Eval", "Thirteen real questions with answers checked against paged database queries, including a fake company that must come back as not found."),
+        ],
+        outcome=[
+            "Thirteen of thirteen on the eval, including the adversarial cases. The pipeline total matches the database to the dollar. The whole thing costs about a dollar a month to run because of the caching.",
+        ],
+        outcome_facts=[("13/13", "correct, was 4/9"), ("23", "tables, was 12"), ("20k", "tokens a turn from cache"), ("~$1", "a month")],
+        notes=[
+            "My own first set of ground truth answers was wrong for the same reason the bot was: Supabase's REST layer caps a response at 1,000 rows and says nothing. The fix is the same in both places, page it or read the count off the header. Two tables that hold credentials are excluded from the assistant on purpose.",
+        ],
+        stack=["Python", "Claude API (Opus)", "Supabase (Postgres)", "Docker", "Prompt caching"],
+    ),
+    dict(
+        slug="workflow-sentinel",
+        title="Workflow watchdog and uptime monitor",
+        cat="ops",
+        status="client",
+        one="A daily n8n job that checks every other workflow, tells a stall from a weekly schedule, re-fires what it can, flags what needs money, and only emails a person when it can't fix the problem itself.",
+        lede="Built the day I found a nightly workflow had been failing for two weeks and nobody knew. The client's rule was simple: everything must run all the time, check daily, heal what you can, email me only when you can't.",
+        index_facts=[("Daily", "checks 28 workflows"), ("5 min", "uptime probe")],
+        facts=[("Runs", "daily at 06:30 UTC"), ("Watches", "every active workflow"), ("Heals", "re-fires once, never twice"), ("Emails", "only when a person is needed")],
+        why=[
+            "Two dozen scheduled workflows and no one watching them. A failure only surfaced when someone noticed the data had stopped moving, which on a nightly pipeline can take weeks.",
+        ],
+        canvases=[dict(title="Every morning", nodes=[
+            ("trigger", "06:30", "daily"),
+            ("fetch", "n8n API", "all active workflows"),
+            ("fetch", "Executions", "last 20 each"),
+            ("transform", "Classify", "error, stall, credits"),
+            ("send", "Re-fire", "the workflow's own webhook"),
+            ("store", "Heartbeat", "alerts table"),
+            ("send", "Email", "only if action needed"),
+        ])],
+        steps=[
+            ("List", "Pulls every active workflow through the n8n API and the last twenty executions of each."),
+            ("Errors", "Anything that errored in the last 24 hours and hasn't since recovered is flagged."),
+            ("Stalls", "A stall threshold per workflow: at least 36 hours, or 1.8 times that workflow's usual gap between runs, so a Monday job isn't reported missing on Wednesday."),
+            ("Credits", "Failures that match a credit or quota message, from the AI API, the enrichment provider, the email checker or the search API, are marked action needed and never re-fired. Re-firing those only burns more."),
+            ("Heal", "Everything else gets its own production webhook fired once. If it recovers, the next morning's report says so."),
+            ("Report", "A heartbeat row goes into an alerts table every day with the findings, and an email goes out only when a person has to do something."),
+            ("Uptime", "A second job probes the public apps every five minutes and emails on down and on recovery. A GitHub Actions check does the same from outside the box every fifteen minutes and opens an issue, so an outage of the box itself still gets seen."),
+        ],
+        outcome=[
+            "The first live run caught a verifier that had been timing out every night and a nightly job running out of memory, and re-fired the first one. Since then the morning email is the only way anyone hears about a broken workflow, and most days there isn't one.",
+        ],
+        outcome_facts=[("2", "real failures caught on run one"), ("1", "email a day at most"), ("0", "silent failures since")],
+        notes=[
+            "The adaptive stall threshold is the part worth copying. A fixed number either misses a stalled nightly job or cries wolf on every weekly one. Two things I learned the hard way: the n8n container resolves its own public hostname to itself, so the box has to be probed from outside, and workflow static data only persists on production runs, not editor test runs.",
+        ],
+        stack=["n8n", "n8n public API", "Supabase", "Microsoft Graph mail", "GitHub Actions"],
     ),
     dict(
         slug="video-generator",
@@ -149,6 +312,7 @@ PROJECTS = [
         notes=[
             "The search APIs are the budget line, so the dedupe step matters more than it looks. It keeps the weekly run from re-searching and re-scoring the same story. Scoring lives in its own sub-workflow so the rules can change without touching the collector.",
         ],
+        also=("buyer-intent-pipeline", "This was the first version. It grew into the buyer intent research pipeline."),
         stack=["n8n", "Airtable", "Tavily search", "Jina search", "GoHighLevel"],
     ),
     dict(
@@ -184,6 +348,7 @@ PROJECTS = [
         notes=[
             "Keeping this as its own sub-workflow means any collector can feed it, not just the monitor. If the CRM changes, only this one workflow changes.",
         ],
+        also=("buyer-intent-pipeline", "This pattern is now part of the buyer intent research pipeline."),
         stack=["n8n", "Claude API", "GoHighLevel", "Webhooks", "JavaScript code nodes"],
     ),
     dict(
@@ -545,14 +710,14 @@ def build_index():
         f'<button type="button" class="filter" data-filter="{k}" aria-pressed="false">{v}</button>' for k, v in CATS.items()
     )
     entries = "\n".join(entry(p) for p in PROJECTS)
-    description = "Ten automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it."
+    description = "Fourteen automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it."
     html = head("Jonathan Bayo, automation case studies", description, "", "") + header(index=True) + f"""
 <main>
   <section class="hero wrap">
     <div class="hero-text">
       <p class="eyebrow">Case studies</p>
       <h1>I build automations that run on their own.</h1>
-      <p class="hero-lede">I'm Jonathan Bayo. I build lead research, outreach, CRM and reporting systems in n8n, Python and Claude for founders and small teams. Ten of them are below, with how each one runs and what came out of it.</p>
+      <p class="hero-lede">I'm Jonathan Bayo. I build lead research, outreach, CRM and reporting systems in n8n, Python and Claude for founders and small teams. Fourteen of them are below, with how each one runs and what came out of it.</p>
     </div>
     <dl class="hero-facts">
       <div><dt>Usual stack</dt><dd>n8n, Python, Claude, Supabase, Apify</dd></div>
@@ -612,6 +777,9 @@ def build_project(p):
             for n, r, t in p["quotes"]
         ) + "</div>"
     notes = "".join(f"<p>{e(t)}</p>" for t in p["notes"])
+    if p.get("also"):
+        slug, text = p["also"]
+        notes += f'<p><a href="{slug}.html">{e(text)}</a></p>'
     stack = "".join(f"<li>{e(s)}</li>" for s in p["stack"])
     title = f'{p["title"]}, Jonathan Bayo'
     html = head(title, p["one"], f'{p["slug"]}.html') + header() + f"""

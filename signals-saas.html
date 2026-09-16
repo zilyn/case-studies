@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-tenant buyer intent product, Jonathan Bayo</title>
+<meta name="description" content="Took the client&#x27;s demo screens and built them into a real multi-tenant SaaS in three weeks: own auth, invites and roles, one data lake with row level isolation, a release gate, fail-soft behaviour and an in-app assistant.">
+<link rel="canonical" href="https://zilyn.github.io/case-studies/signals-saas.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Multi-tenant buyer intent product, Jonathan Bayo">
+<meta property="og:description" content="Took the client&#x27;s demo screens and built them into a real multi-tenant SaaS in three weeks: own auth, invites and roles, one data lake with row level isolation, a release gate, fail-soft behaviour and an in-app assistant.">
+<meta property="og:url" content="https://zilyn.github.io/case-studies/signals-saas.html">
+<meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
+    <nav class="top-nav" aria-label="Site">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#how">How I work</a>
+      <a href="index.html#contact">Contact</a>
+      <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article wrap">
+  <a class="back" href="index.html#work">All case studies</a>
+  <div class="entry-eyebrow"><span class="cat">Product</span><span class="status status-client">Client</span></div>
+  <h1>Multi-tenant buyer intent product</h1>
+  <p class="lede">The sales intelligence client wanted to sell the signals as a product, not a service. In three weeks the demo screens became a tenant app with accounts, workspaces, invites, roles, trials, an isolation harness that runs before every release, and an assistant that answers questions about the workspace&#x27;s own data.</p>
+
+  <dl class="facts"><div><dt>Built</dt><dd>three weeks, demo to MVP</dd></div><div><dt>Tenancy</dt><dd>one lake, org id on every row, RLS backstop</dd></div><div><dt>Isolation</dt><dd>29 checks, run before every release</dd></div><div><dt>Client</dt><dd>B2B sales intelligence company</dd></div></dl>
+
+  <section class="sec">
+    <h2>Why it exists</h2>
+    <p>The pipeline above produced the data. The client needed other companies to be able to log in and see only their own slice of it, invite their team, rate signals and get a brief, without any of it leaking across workspaces. And it had to be demoable to partners in under two weeks.</p>
+  </section>
+
+  <section class="sec sec-wide">
+    <h2>How it runs</h2>
+    <figure class="canvas"><figcaption class="canvas-title">Request path</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Browser</div><div class="node-sub">session cookie</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">App</div><div class="node-sub">Python, own container</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Policy</div><div class="node-sub">org membership, role</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Supabase</div><div class="node-sub">per request JWT, RLS</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Ask</div><div class="node-sub">Sonnet, ten scoped tools</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Audit</div><div class="node-sub">every write logged</div></div></div></figure>
+    <ol class="steps"><li><h3>Auth</h3><p>Extended the client&#x27;s existing password auth rather than adding a vendor: invites and resets by email, sessions with a version number so a revoke logs everyone out, a 90 day hard cap, roles per workspace.</p></li><li><h3>Tenancy</h3><p>Every row carries the workspace id. The app injects it server side on every query, and as a second line the database enforces row level security with a token minted per request. Both were proven at the database: the right workspace reads its rows, a bogus one gets nothing, a forged token gets a 401.</p></li><li><h3>Isolation harness</h3><p>29 HTTP checks that try to read across workspaces as a stranger, a member, an admin and a former member. It runs before every release and has to be green.</p></li><li><h3>Release gate</h3><p>A scripted browser walk through the product, a dependency scan and the harness. A release that fails any of them doesn&#x27;t ship. Five releases went through it in the first three weeks.</p></li><li><h3>Fail soft</h3><p>Built during a live database incident. Store errors show a one moment page instead of a broken product, the dataset is served stale while a refresh runs in the background, and a disk copy survives a restart. Two uptime monitors watch it, one inside the box and one on GitHub.</p></li><li><h3>Ask</h3><p>An assistant inside the app on Claude Sonnet with ten read only tools that only see the workspace&#x27;s own data. Twenty questions an hour per person, sixty a day per workspace, thirteen out of thirteen on the eval.</p></li></ol>
+  </section>
+
+  <section class="sec">
+    <h2>What came out of it</h2>
+    <p>The product went from a set of demo boards to release 0.5.0 on production in three weeks, with the partner demo made and testers on a staging copy. A stress run of 300 concurrent requests came back with no errors and isolation held.</p>
+    <div class="fact-row"><div class="fact"><span class="fact-val">3 wks</span><span class="fact-lab">demo to MVP</span></div><div class="fact"><span class="fact-val">0.5.0</span><span class="fact-lab">on production</span></div><div class="fact"><span class="fact-val">29/29</span><span class="fact-lab">isolation checks</span></div><div class="fact"><span class="fact-val">300</span><span class="fact-lab">requests, 0 errors</span></div></div>
+    
+  </section>
+
+  <section class="sec">
+    <h2>Notes</h2>
+    <p>The whole app is Python standard library, no framework, which the client&#x27;s ops setup made the right call. One thing that bit: with strict tool schemas where every field is required, Sonnet fills the fields it doesn&#x27;t need with fragments of its own tool markup. Optional fields are nullable now and inputs are scrubbed.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Stack</h2>
+    <ul class="stack"><li>Python</li><li>Supabase (Postgres, RLS)</li><li>Docker</li><li>Traefik</li><li>Claude API (Sonnet)</li><li>Playwright</li><li>GitHub Actions</li><li>n8n</li></ul>
+  </section>
+
+  <section class="cta cta-article" id="contact">
+    <h2>Want something like this built?</h2>
+    <p>Tell me what you're trying to automate. Most things can be built in a week or two.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a 15 minute call</a>
+      <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap foot-row">
+    <span>Jonathan Bayo</span>
+    <span><a href="mailto:bayoadegokeiyanu@gmail.com">bayoadegokeiyanu@gmail.com</a></span>
+    <span><a href="https://github.com/zilyn">github.com/zilyn</a></span>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>
