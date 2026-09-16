@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span><span class="cat cat-time">1 min read</span></div>
   <h1>CRM lead enrichment pipeline</h1>
   <p class="lede">A sub-workflow any collector can call. It maps the incoming lead to the CRM&#x27;s shape, asks Claude for a short executive problem statement, assembles the record and fires it at GoHighLevel. Reps open the CRM and the research is already done.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">~3 s</span><span class="fact-lab">per lead</span></div><div class="fact"><span class="fact-val">100%</span><span class="fact-lab">of leads qualified the same way</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual data entry</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Trigger</dt><dd>called by the monitor</dd></div><div><dt>Time per lead</dt><dd>about 3 s</dd></div><div><dt>Manual entry</dt><dd>none</dd></div><div><dt>Output</dt><dd>contact and opportunity in GoHighLevel</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Reps spend hours researching a company before a call and then write inconsistent notes. Everyone captures something different and leadership can&#x27;t see a clean pipeline.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Per lead</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Upstream call</div><div class="node-sub">from the monitor</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Map fields</div><div class="node-sub">to the CRM schema</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">problem statement</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Build payload</div><div class="node-sub">full record</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">GoHighLevel</div><div class="node-sub">webhook</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Per lead</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Upstream call</div><div class="node-sub">from the monitor</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Map fields</div><div class="node-sub">to the CRM schema</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">problem statement</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Build payload</div><div class="node-sub">full record</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">GoHighLevel</div><div class="node-sub">webhook</div></div></div></figure>
     <ol class="steps"><li><h3>Receive</h3><p>The intelligence monitor calls this workflow after a company is scored, with the full lead package.</p></li><li><h3>Map</h3><p>A code node reshapes the data into GoHighLevel&#x27;s format: contact fields, company fields, custom attributes.</p></li><li><h3>Write the problem</h3><p>Claude gets the company context and the signal and writes a two or three sentence problem statement. Specific, no filler.</p></li><li><h3>Assemble</h3><p>The record is built up: company, decision maker, the problem, urgency score, the evidence and a suggested next step.</p></li><li><h3>Push</h3><p>The payload goes to GoHighLevel by webhook. Contact and opportunity are created or updated.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>Reps open a lead and the research is there in plain words. Every record has the same fields, so the pipeline view finally means something.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">~3 s</span><span class="fact-lab">per lead</span></div><div class="fact"><span class="fact-val">100%</span><span class="fact-lab">of leads qualified the same way</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual data entry</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>Keeping this as its own sub-workflow means any collector can feed it, not just the monitor. If the CRM changes, only this one workflow changes.</p><p><a href="buyer-intent-pipeline.html">This pattern is now part of the buyer intent research pipeline.</a></p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Claude API</li><li>GoHighLevel</li><li>Webhooks</li><li>JavaScript code nodes</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="company-monitor.html"><span class="nb-label">Previous</span><span class="nb-title">Company intelligence monitor</span><span class="nb-one">Every Monday it reads a list of target companies, searches for fresh signals like funding, hiring and leadership changes, scores them and pushes the hot ones into the CRM.</span></a>
+    <a class="nb" href="google-maps-leads.html"><span class="nb-label">Next</span><span class="nb-title">Google Maps lead discovery</span><span class="nb-one">Searches Google Maps for a business type in a city, scrapes each website for contact details, has Claude pull out what the business does and writes a clean lead list to Google Sheets.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-live">Live</span></div>
+  <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-live">Live</span><span class="cat cat-time">2 min read</span></div>
   <h1>LinkedIn cold outreach system</h1>
   <p class="lede">Two n8n workflows. The first finds leads on LinkedIn and writes each one an email that refers to something they actually posted. The second sends those emails one at a time and keeps the sheet honest.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">91</span><span class="fact-lab">emails sent</span></div><div class="fact"><span class="fact-val">2</span><span class="fact-lab">replies in 24 h</span></div><div class="fact"><span class="fact-val">1</span><span class="fact-lab">call booked</span></div><div class="fact"><span class="fact-val">$3</span><span class="fact-lab">per 100 leads</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Trigger</dt><dd>manual search, then a daily send job</dd></div><div><dt>Cap</dt><dd>100 emails a day</dd></div><div><dt>Spacing</dt><dd>30 s between sends</dd></div><div><dt>Cost</dt><dd>about $3 per 100 leads</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>I wanted outreach that reads like I wrote it, without spending a day writing a hundred emails. Most tools send the same template to everyone and people can tell.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Workflow 1. Lead scout</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Apify search</div><div class="node-sub">LinkedIn profiles, up to 300</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter</div><div class="node-sub">dupes, excluded companies, no email</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Scrape posts</div><div class="node-sub">last 5 posts per person</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">subject and body from real posts</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Google Sheets</div><div class="node-sub">full lead record</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Workflow 2. Outreach engine</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Daily run</div><div class="node-sub">reads the sheet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter new</div><div class="node-sub">cap at 100 a day</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Gmail</div><div class="node-sub">30 s between sends</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Mark sent</div><div class="node-sub">never emails twice</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Workflow 1. Lead scout</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Apify search</div><div class="node-sub">LinkedIn profiles, up to 300</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter</div><div class="node-sub">dupes, excluded companies, no email</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Scrape posts</div><div class="node-sub">last 5 posts per person</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">subject and body from real posts</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Google Sheets</div><div class="node-sub">full lead record</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Workflow 2. Outreach engine</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Daily run</div><div class="node-sub">reads the sheet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter new</div><div class="node-sub">cap at 100 a day</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Gmail</div><div class="node-sub">30 s between sends</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Mark sent</div><div class="node-sub">never emails twice</div></div></div></figure>
     <ol class="steps"><li><h3>Search</h3><p>Apify searches LinkedIn for a keyword like &quot;founder fintech&quot; and returns up to 300 profiles with names, titles, companies and emails.</p></li><li><h3>Filter</h3><p>Duplicates, companies I don&#x27;t want to contact and anyone without an email are dropped.</p></li><li><h3>Read their posts</h3><p>For each lead the workflow pulls their last five LinkedIn posts. This is what makes the email specific to the person.</p></li><li><h3>Write the email</h3><p>Claude gets the bio, title, company and posts and writes a short email that refers to something the person said. The prompt bans buzzwords, asks for contractions and keeps it under a few lines.</p></li><li><h3>Save</h3><p>Everything lands in a Google Sheet: name, email, subject, body, a connection note, a lead score and a status of &quot;new&quot;.</p></li><li><h3>Send</h3><p>The second workflow reads the sheet, takes the &quot;new&quot; rows, stops at 100 for the day and sends each one through Gmail with 30 seconds between sends.</p></li><li><h3>Mark sent</h3><p>After each send the row flips to &quot;sent&quot;, so nobody gets the same email twice.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>The first run sent 91 emails. Two people replied within 24 hours, one of them booked a call.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">91</span><span class="fact-lab">emails sent</span></div><div class="fact"><span class="fact-val">2</span><span class="fact-lab">replies in 24 h</span></div><div class="fact"><span class="fact-val">1</span><span class="fact-lab">call booked</span></div><div class="fact"><span class="fact-val">$3</span><span class="fact-lab">per 100 leads</span></div></div>
     <div class="replies"><blockquote class="reply"><p>Could you share more use cases and examples? I&#x27;m super curious about this.</p><footer>Shane Martin, Fund manager and accelerator founder, B Ventures</footer></blockquote><blockquote class="reply"><p>Asked for a resume and a WhatsApp number. Call booked within 24 hours.</p><footer>Teddy White, Operations lead, Syntharos</footer></blockquote></div>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>Two replies from 91 sends is a small sample, so I&#x27;m not calling it a reply rate yet. The 30 second spacing and the daily cap are what keep the Gmail account safe. The search step is the part that needs the most care, because LinkedIn limits how much you can pull.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Apify (LinkedIn search, post scraper)</li><li>Claude API</li><li>Gmail</li><li>Google Sheets</li><li>Python</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    
+    <a class="nb" href="buyer-intent-pipeline.html"><span class="nb-label">Next</span><span class="nb-title">Buyer intent research pipeline</span><span class="nb-one">A nightly system of 28 n8n workflows that finds buying signals across the web, turns them into scored, tiered companies with verified contacts, and feeds a sales CRM. Built over a year for a B2B sales intelligence company.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

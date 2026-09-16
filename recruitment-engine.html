@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span><span class="cat cat-time">1 min read</span></div>
   <h1>Recruitment enrichment engine</h1>
   <p class="lede">Set the role, skills, location and experience once. The pipeline finds matching profiles, adds whatever public signal exists, scores each one against the job and hands the recruiter the top 40% with the reasoning.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">90%</span><span class="fact-lab">less screening time, reported</span></div><div class="fact"><span class="fact-val">32%</span><span class="fact-lab">conversion lift, reported</span></div><div class="fact"><span class="fact-val">500+</span><span class="fact-lab">candidates a day</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Candidates a day</dt><dd>500+</dd></div><div><dt>Reviewed by a person</dt><dd>the top 40%</dd></div><div><dt>Screening time</dt><dd>down about 90%, client reported</dd></div><div><dt>Platform</dt><dd>Make.com</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Recruiters spend most of the day on search, copy paste and first pass screening. Almost none of that needs judgment. It&#x27;s repetitive data work.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Per opening</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Job criteria</div><div class="node-sub">role, skills, location</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Apify</div><div class="node-sub">LinkedIn, GitHub, job boards</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Enrich</div><div class="node-sub">public signals</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Score</div><div class="node-sub">fit against the job</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Airtable</div><div class="node-sub">qualified only</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Notify</div><div class="node-sub">Slack or email</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Per opening</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Job criteria</div><div class="node-sub">role, skills, location</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Apify</div><div class="node-sub">LinkedIn, GitHub, job boards</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Enrich</div><div class="node-sub">public signals</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Score</div><div class="node-sub">fit against the job</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Airtable</div><div class="node-sub">qualified only</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Notify</div><div class="node-sub">Slack or email</div></div></div></figure>
     <ol class="steps"><li><h3>Define</h3><p>Role title, required skills, location and experience level, set once per opening.</p></li><li><h3>Scrape</h3><p>Apify searches LinkedIn, GitHub and job boards for matching candidates and returns structured profiles.</p></li><li><h3>Enrich</h3><p>GitHub activity, portfolio links, publications and any other public signal get added.</p></li><li><h3>Score</h3><p>An AI model rates each profile against the job requirements and writes down its reasoning. The bottom 60% are dropped.</p></li><li><h3>Store</h3><p>Candidates above the line go into Airtable with their score, key strengths and suggested interview questions.</p></li><li><h3>Notify</h3><p>The recruiter gets a Slack message or email: how many found, how many qualified, the top three.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>Recruiters only look at the top 40%, each with a score, strengths and questions to ask. The client reported screening time down about 90% and a 32% lift in candidates converting to interview.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">90%</span><span class="fact-lab">less screening time, reported</span></div><div class="fact"><span class="fact-val">32%</span><span class="fact-lab">conversion lift, reported</span></div><div class="fact"><span class="fact-val">500+</span><span class="fact-lab">candidates a day</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>This one runs on Make.com and OpenAI rather than n8n and Claude because that&#x27;s what the client already had. The pattern is the same. Scraping profiles has terms of service limits, so volume is kept under what the sources tolerate.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>Make.com</li><li>Apify</li><li>OpenAI API</li><li>Airtable</li><li>Slack</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="rag-assistant.html"><span class="nb-label">Previous</span><span class="nb-title">Internal knowledge assistant</span><span class="nb-one">Staff ask a plain question about company documents, policies and contracts and get an answer with the source cited. Runs on the company&#x27;s own servers.</span></a>
+    <a class="nb" href="client-onboarding.html"><span class="nb-label">Next</span><span class="nb-title">Zero touch client onboarding</span><span class="nb-one">A signed form kicks off the contract, the e-signature, the project folder, the Slack channel, the CRM deal and the welcome email. About 60 seconds, no hand offs.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

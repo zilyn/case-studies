@@ -21,13 +21,33 @@
     });
   });
 
-  // The whole row opens the case study, unless a link inside it was clicked.
-  document.querySelectorAll('.entry[data-href]').forEach(function (el) {
+  // The whole card opens the case study, unless a link inside it was clicked.
+  document.querySelectorAll('.entry[data-href], .fcard[data-href]').forEach(function (el) {
     el.addEventListener('click', function (e) {
       if (e.target.closest('a')) return;
       window.location.href = el.dataset.href;
     });
   });
+
+  // Highlight the section in view in the sticky page nav.
+  var links = document.querySelectorAll('.subnav a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var byId = {};
+    links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (found) {
+      found.forEach(function (en) {
+        if (en.isIntersecting) {
+          links.forEach(function (a) { a.classList.remove('is-here'); });
+          var a = byId[en.target.id];
+          if (a) a.classList.add('is-here');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    Object.keys(byId).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+  }
 
   // Theme toggle: system by default, remembered per browser once chosen.
   var toggle = document.getElementById('theme-toggle');

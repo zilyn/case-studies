@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span><span class="cat cat-time">1 min read</span></div>
   <h1>Company intelligence monitor</h1>
   <p class="lede">A weekly system that watches a list of 200 or so target companies for things worth a call. It searches, drops what it has already seen, scores what&#x27;s new and pushes anything above the line into GoHighLevel with the evidence attached.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">Weekly</span><span class="fact-lab">runs on its own</span></div><div class="fact"><span class="fact-val">200+</span><span class="fact-lab">companies tracked</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual review</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Trigger</dt><dd>Mondays, 06:00</dd></div><div><dt>Companies</dt><dd>200+</dd></div><div><dt>Sources</dt><dd>Tavily and Jina search</dd></div><div><dt>Output</dt><dd>GoHighLevel CRM</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Sales teams have long target lists but no way of knowing when a company is actually ready to talk. Nobody has time to check the news on 200 companies every week, so the signals get missed.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Weekly run</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Monday 06:00</div><div class="node-sub">schedule</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Airtable</div><div class="node-sub">target companies</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Tavily + Jina</div><div class="node-sub">recent news per company</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Dedupe</div><div class="node-sub">drop known signals</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Score</div><div class="node-sub">urgency and fit</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">GoHighLevel</div><div class="node-sub">hot leads with evidence</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Weekly run</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Monday 06:00</div><div class="node-sub">schedule</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Airtable</div><div class="node-sub">target companies</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Tavily + Jina</div><div class="node-sub">recent news per company</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Dedupe</div><div class="node-sub">drop known signals</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Score</div><div class="node-sub">urgency and fit</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">GoHighLevel</div><div class="node-sub">hot leads with evidence</div></div></div></figure>
     <ol class="steps"><li><h3>Read the list</h3><p>Pulls the Tier 1 and Tier 2 companies from Airtable, each with its domain, industry and fit score.</p></li><li><h3>Search</h3><p>For each company it searches Tavily and Jina for recent news: funding rounds, executive hires, launches, expansion.</p></li><li><h3>Dedupe</h3><p>New results are compared against the signals already stored. Only new information moves on, so the same story never gets scored twice.</p></li><li><h3>Score</h3><p>A separate sub-workflow scores each signal on urgency and fit. Funding raised this week beats a blog post from three months ago.</p></li><li><h3>Push</h3><p>Anything above the threshold goes to GoHighLevel with the company, the signal type, the evidence, the urgency and a suggested next step.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>The team starts every week with a short list of companies that just did something worth a call, with the evidence attached. Nobody reads the news by hand any more.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">Weekly</span><span class="fact-lab">runs on its own</span></div><div class="fact"><span class="fact-val">200+</span><span class="fact-lab">companies tracked</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual review</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>The search APIs are the budget line, so the dedupe step matters more than it looks. It keeps the weekly run from re-searching and re-scoring the same story. Scoring lives in its own sub-workflow so the rules can change without touching the collector.</p><p><a href="buyer-intent-pipeline.html">This was the first version. It grew into the buyer intent research pipeline.</a></p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Airtable</li><li>Tavily search</li><li>Jina search</li><li>GoHighLevel</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="video-generator.html"><span class="nb-label">Previous</span><span class="nb-title">Personalized video generator</span><span class="nb-one">Picks the highest priority leads from Supabase, has Claude write a 45 second script, sends it to Visla to render and saves the video link back on the lead.</span></a>
+    <a class="nb" href="crm-pipeline.html"><span class="nb-label">Next</span><span class="nb-title">CRM lead enrichment pipeline</span><span class="nb-one">Takes a scored lead from the monitor, has Claude write a two sentence problem statement for the company, builds the full CRM record and pushes it to GoHighLevel. About three seconds a lead.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

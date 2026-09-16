@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span></div>
+  <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span><span class="cat cat-time">1 min read</span></div>
   <h1>Internal knowledge assistant</h1>
   <p class="lede">A retrieval assistant over the company&#x27;s own documents. Files are chunked and embedded into Weaviate, a question pulls the closest passages, and Claude answers from those passages only, naming the document and section each fact came from.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">40%</span><span class="fact-lab">fewer tickets, client reported</span></div><div class="fact"><span class="fact-val">~2 s</span><span class="fact-lab">per answer</span></div><div class="fact"><span class="fact-val">100%</span><span class="fact-lab">answered from internal data</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Answer time</dt><dd>about 2 s</dd></div><div><dt>Data</dt><dd>stays on internal servers</dd></div><div><dt>Interface</dt><dd>chat and Slack</dd></div><div><dt>Reindex</dt><dd>automatic on change</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Companies have hundreds of internal documents and people still email HR or spend twenty minutes digging through PDFs. New staff can&#x27;t find anything, so onboarding drags.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Ingest</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Documents</div><div class="node-sub">PDF, Word, text</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Chunk + embed</div><div class="node-sub">passages to vectors</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Weaviate</div><div class="node-sub">semantic index</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Answer</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Question</div><div class="node-sub">chat or Slack</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Retrieve</div><div class="node-sub">closest passages</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">answer with citations</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Ingest</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Documents</div><div class="node-sub">PDF, Word, text</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Chunk + embed</div><div class="node-sub">passages to vectors</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Weaviate</div><div class="node-sub">semantic index</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Answer</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Question</div><div class="node-sub">chat or Slack</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Retrieve</div><div class="node-sub">closest passages</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">answer with citations</div></div></div></figure>
     <ol class="steps"><li><h3>Ingest</h3><p>PDFs, Word files and text are split into passages, embedded and stored in Weaviate.</p></li><li><h3>Stay current</h3><p>When a document changes or a new one is added, the pipeline reindexes it. No manual upkeep.</p></li><li><h3>Ask</h3><p>Someone asks a plain question in the chat interface or the Slack bot.</p></li><li><h3>Retrieve</h3><p>The question is embedded and matched against the stored passages. The closest ones are pulled.</p></li><li><h3>Answer</h3><p>Claude gets the question and those passages and writes a short answer grounded in them only. If nothing relevant was found it says so.</p></li><li><h3>Cite</h3><p>Every answer names the document and section it came from, so people can check it.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>The client reported about 40% fewer internal support tickets after rollout. Answers come back in about two seconds and every one points at its source.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">40%</span><span class="fact-lab">fewer tickets, client reported</span></div><div class="fact"><span class="fact-val">~2 s</span><span class="fact-lab">per answer</span></div><div class="fact"><span class="fact-val">100%</span><span class="fact-lab">answered from internal data</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>The &quot;I couldn&#x27;t find that&quot; path is what makes people trust it. An assistant that guesses when the documents don&#x27;t say gets ignored within a week. Everything runs on the company&#x27;s own infrastructure, so no document leaves the building.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>Python (FastAPI)</li><li>Weaviate</li><li>LangChain</li><li>Claude API</li><li>Docker</li><li>AWS EC2</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="google-maps-leads.html"><span class="nb-label">Previous</span><span class="nb-title">Google Maps lead discovery</span><span class="nb-one">Searches Google Maps for a business type in a city, scrapes each website for contact details, has Claude pull out what the business does and writes a clean lead list to Google Sheets.</span></a>
+    <a class="nb" href="recruitment-engine.html"><span class="nb-label">Next</span><span class="nb-title">Recruitment enrichment engine</span><span class="nb-one">Scrapes candidate profiles for a role, enriches them with public data, scores fit against the job with AI and pushes only the qualified ones into Airtable with a summary for the recruiter.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

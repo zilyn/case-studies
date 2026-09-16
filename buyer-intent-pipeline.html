@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span></div>
+  <div class="entry-eyebrow"><span class="cat">Intelligence</span><span class="status status-client">Client</span><span class="cat cat-time">3 min read</span></div>
   <h1>Buyer intent research pipeline</h1>
   <p class="lede">This started as the weekly company monitor and grew into the whole back end of a sales intelligence business. Collectors find signals, an orchestrator turns them into companies and scores them, enrichers add people and firmographics, verifiers check every email and phone, and a weekly loop re-researches the companies that went quiet. It all runs overnight.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">3,300</span><span class="fact-lab">companies tracked</span></div><div class="fact"><span class="fact-val">900</span><span class="fact-lab">in the top two tiers</span></div><div class="fact"><span class="fact-val">4,000+</span><span class="fact-lab">contacts</span></div><div class="fact"><span class="fact-val">97%</span><span class="fact-lab">domain coverage, top tiers</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Runs</dt><dd>nightly, 28 n8n workflows</dd></div><div><dt>Companies</dt><dd>about 3,300, 900 in the top two tiers</dd></div><div><dt>Contacts</dt><dd>4,000+, every email checked</dd></div><div><dt>Client</dt><dd>B2B sales intelligence company</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>The client sells to companies that are about to spend on AI and consulting. The signal that they&#x27;re about to spend shows up in the news, in hiring, in filings and on company sites, but nobody can read all of that for thousands of companies. The first version watched 200 companies once a week. The client wanted every company they might ever sell to, scored every night, with someone to call.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Every night</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Collectors</div><div class="node-sub">Tavily, filings, news, hiring</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Orchestrator</div><div class="node-sub">signal to company, dedupe</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Score</div><div class="node-sub">deterministic tiers</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">description, fit, problem</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Enrich</div><div class="node-sub">domain, firmographics, people</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Verify</div><div class="node-sub">email and phone</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Supabase</div><div class="node-sub">CRM reads it</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Every week</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Monday</div><div class="node-sub">stuck companies</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Re-research</div><div class="node-sub">biggest first</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Classify</div><div class="node-sub">new signals</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Re-score</div><div class="node-sub">next night</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Every night</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Collectors</div><div class="node-sub">Tavily, filings, news, hiring</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Orchestrator</div><div class="node-sub">signal to company, dedupe</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Score</div><div class="node-sub">deterministic tiers</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">description, fit, problem</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Enrich</div><div class="node-sub">domain, firmographics, people</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Verify</div><div class="node-sub">email and phone</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Supabase</div><div class="node-sub">CRM reads it</div></div></div></figure><figure class="canvas"><figcaption class="canvas-title">Every week</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Monday</div><div class="node-sub">stuck companies</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Re-research</div><div class="node-sub">biggest first</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Classify</div><div class="node-sub">new signals</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Re-score</div><div class="node-sub">next night</div></div></div></figure>
     <ol class="steps"><li><h3>Collect</h3><p>Several collectors search for signals: funding, layoffs, leadership changes, AI initiatives, regulatory pressure, new hires. Each signal is stored with its source and date.</p></li><li><h3>Match</h3><p>The orchestrator matches every signal to a company, creates the company if it&#x27;s new and drops duplicates. A name quality gate stops headline fragments from becoming companies, which was the biggest source of junk early on.</p></li><li><h3>Score</h3><p>Scoring is plain JavaScript, not a model, so the same evidence always scores the same way. Companies land in four tiers from Tier 1 to Discard, and the tier drives everything downstream.</p></li><li><h3>Describe</h3><p>Claude writes the description, the fit against the client&#x27;s offerings and a short problem statement for each company in the top tiers.</p></li><li><h3>Enrich</h3><p>A resolver finds the company domain, then Apollo adds decision makers for 75 companies a night, highest tier first. Domain coverage for the top tiers went from 75% to 97%.</p></li><li><h3>Verify</h3><p>Every new contact goes through NeverBounce for the email and Twilio for the phone line type, plus checks against LinkedIn, the company site, GitHub and the domain&#x27;s mail records. 350 contacts a night.</p></li><li><h3>Re-research</h3><p>Companies that scored well but went quiet get re-searched every Monday, biggest first, because the small ones return nothing but generic headlines.</p></li><li><h3>Draft</h3><p>For companies that clear the bar, Claude drafts an outreach sequence and a QA gate checks every claim in it before a person sees it.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>The client&#x27;s team opens the CRM in the morning and the night&#x27;s work is there: new companies, tiers, people with checked emails and a reason to call. About 3,300 companies are tracked, 900 or so sit in the top two tiers, and 2,800 plus emails have been validated. A cleanup in August took 64 workflows down to 28 without losing a function.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">3,300</span><span class="fact-lab">companies tracked</span></div><div class="fact"><span class="fact-val">900</span><span class="fact-lab">in the top two tiers</span></div><div class="fact"><span class="fact-val">4,000+</span><span class="fact-lab">contacts</span></div><div class="fact"><span class="fact-val">97%</span><span class="fact-lab">domain coverage, top tiers</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>The expensive lesson: Supabase&#x27;s REST layer silently caps a response at 1,000 rows. One background worker read its done list unpaged, the list crossed 1,000, and it regenerated the same work every two minutes for five weeks. That was about half of one month&#x27;s API bill. Every worker that calls a paid API now pages its reads, caps its attempts per day and logs its usage.</p><p>The other lesson is that signal discovery is not the same as per company research. A company nobody writes about never improves its score on its own, which is why the weekly re-research loop exists.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Supabase (Postgres)</li><li>Claude API</li><li>Tavily</li><li>Apollo</li><li>NeverBounce</li><li>Twilio Lookup</li><li>Prospeo</li><li>JavaScript</li><li>Python</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="linkedin-outreach.html"><span class="nb-label">Previous</span><span class="nb-title">LinkedIn cold outreach system</span><span class="nb-one">Finds people on LinkedIn, reads their recent posts, writes each of them a short email with Claude and sends it. Running for my own business.</span></a>
+    <a class="nb" href="signals-saas.html"><span class="nb-label">Next</span><span class="nb-title">Multi-tenant buyer intent product</span><span class="nb-one">Took the client&#x27;s demo screens and built them into a real multi-tenant SaaS in three weeks: own auth, invites and roles, one data lake with row level isolation, a release gate, fail-soft behaviour and an in-app assistant.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

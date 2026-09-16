@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-built">Built</span></div>
+  <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-built">Built</span><span class="cat cat-time">1 min read</span></div>
   <h1>Event follow up engine</h1>
   <p class="lede">Attendee data comes in from the event platform, each person is grouped by what they attended, Claude writes a follow up that refers to it, and the batch goes out within a day while people still remember the event.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">24 h</span><span class="fact-lab">follow up window</span></div><div class="fact"><span class="fact-val">300+</span><span class="fact-lab">attendees handled</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">attendees missed</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Trigger</dt><dd>event export or webhook</dd></div><div><dt>Window</dt><dd>within 24 hours</dd></div><div><dt>Attendees</dt><dd>300+ per event</dd></div><div><dt>Spacing</dt><dd>30 s between sends</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Events produce warm leads and then the follow up is slow, generic or doesn&#x27;t happen. Writing 300 personal emails by hand isn&#x27;t going to happen, so teams send a blast or nothing.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Per event</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Attendee data</div><div class="node-sub">export or webhook</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Segment</div><div class="node-sub">by session</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">personal follow up</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Gmail</div><div class="node-sub">within 24 h</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Log</div><div class="node-sub">CRM or sheet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Flag</div><div class="node-sub">hot leads</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Per event</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Attendee data</div><div class="node-sub">export or webhook</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Segment</div><div class="node-sub">by session</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">personal follow up</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Gmail</div><div class="node-sub">within 24 h</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Log</div><div class="node-sub">CRM or sheet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Flag</div><div class="node-sub">hot leads</div></div></div></figure>
     <ol class="steps"><li><h3>Import</h3><p>Attendee data arrives from the platform&#x27;s export or a webhook: name, email, sessions, notes.</p></li><li><h3>Segment</h3><p>People are grouped by the sessions they attended and the topics they engaged with.</p></li><li><h3>Write</h3><p>Claude writes each follow up from the person&#x27;s sessions and notes, so it refers to what they actually saw.</p></li><li><h3>Send</h3><p>The batch goes out within 24 hours with 30 seconds between sends.</p></li><li><h3>Log</h3><p>Each contact is recorded with engagement level, sessions and the follow up sent, ready for sales.</p></li><li><h3>Flag</h3><p>The people who engaged most are flagged for a personal follow up by the team.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>Everyone hears back within a day with something that refers to their event, and the team gets a short list of who to call personally.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">24 h</span><span class="fact-lab">follow up window</span></div><div class="fact"><span class="fact-val">300+</span><span class="fact-lab">attendees handled</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">attendees missed</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>Built to prove the pattern. The segmenting is only as good as the attendance data the event platform exports, so the first thing to check on a new client is what their platform actually records.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Claude API</li><li>Gmail</li><li>Airtable</li><li>Webhooks</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="investor-reports.html"><span class="nb-label">Previous</span><span class="nb-title">Investor report automation</span><span class="nb-one">On the first of the month it pulls portfolio numbers from Sheets, has Claude write the month&#x27;s narrative, builds each investor&#x27;s report with their own allocation and sends it.</span></a>
+    
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

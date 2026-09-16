@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span></div>
+  <div class="entry-eyebrow"><span class="cat">AI systems</span><span class="status status-client">Client</span><span class="cat cat-time">1 min read</span></div>
   <h1>Personalized video generator</h1>
   <p class="lede">A workflow that runs every five minutes, takes the leads with the highest pain score, writes each one a short video script with Claude and has Visla render a presenter video. The sales team opens the lead and the video is already there.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">5 min</span><span class="fact-lab">cycle time</span></div><div class="fact"><span class="fact-val">45 s</span><span class="fact-lab">per video</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual steps</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Trigger</dt><dd>every 5 minutes</dd></div><div><dt>Script</dt><dd>45 seconds</dd></div><div><dt>Render check</dt><dd>every 30 s</dd></div><div><dt>Manual steps</dt><dd>none</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Video gets replies, but recording one per prospect takes hours. So teams either skip it or send one generic video to everyone, which defeats the point.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Pipeline</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Schedule</div><div class="node-sub">every 5 minutes</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Supabase</div><div class="node-sub">high priority leads, no video yet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">45 second script</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Visla</div><div class="node-sub">HMAC signed request</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Poll</div><div class="node-sub">until rendered</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Save URL</div><div class="node-sub">back on the lead</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Pipeline</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Schedule</div><div class="node-sub">every 5 minutes</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Supabase</div><div class="node-sub">high priority leads, no video yet</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">45 second script</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Visla</div><div class="node-sub">HMAC signed request</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Poll</div><div class="node-sub">until rendered</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Save URL</div><div class="node-sub">back on the lead</div></div></div></figure>
     <ol class="steps"><li><h3>Pick the leads</h3><p>Every five minutes the workflow pulls leads from Supabase that are marked high priority and don&#x27;t have a video yet. Each one carries company context, pain signals and contact details.</p></li><li><h3>Write the script</h3><p>Claude writes a 45 second script that refers to the lead&#x27;s specific pain point and keeps the tone conversational.</p></li><li><h3>Sign the request</h3><p>Visla wants HMAC signed requests, so the workflow builds the signature fresh before every call.</p></li><li><h3>Render</h3><p>Visla generates the presenter video from the script.</p></li><li><h3>Wait</h3><p>The workflow polls Visla every 30 seconds until the render is done, so slow renders don&#x27;t break anything.</p></li><li><h3>Save</h3><p>The video URL goes back on the lead record in Supabase for the sales team.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>From lead to video link is about five minutes plus render time, with nobody touching it.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">5 min</span><span class="fact-lab">cycle time</span></div><div class="fact"><span class="fact-val">45 s</span><span class="fact-lab">per video</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual steps</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>Render time varies a lot, so the polling loop is what makes this reliable. The HMAC step was the fiddly part. The signature has to be rebuilt for every request or Visla rejects it.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Claude API</li><li>Visla API</li><li>Supabase</li><li>HMAC auth</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="workflow-sentinel.html"><span class="nb-label">Previous</span><span class="nb-title">Workflow watchdog and uptime monitor</span><span class="nb-one">A daily n8n job that checks every other workflow, tells a stall from a weekly schedule, re-fires what it can, flags what needs money, and only emails a person when it can&#x27;t fix the problem itself.</span></a>
+    <a class="nb" href="company-monitor.html"><span class="nb-label">Next</span><span class="nb-title">Company intelligence monitor</span><span class="nb-one">Every Monday it reads a list of target companies, searches for fresh signals like funding, hiring and leadership changes, scores them and pushes the hot ones into the CRM.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

@@ -81,6 +81,7 @@ PROJECTS = [
     ),
     dict(
         slug="buyer-intent-pipeline",
+        featured=True,
         title="Buyer intent research pipeline",
         cat="intelligence",
         status="client",
@@ -130,6 +131,7 @@ PROJECTS = [
     ),
     dict(
         slug="signals-saas",
+        featured=True,
         title="Multi-tenant buyer intent product",
         cat="product",
         status="client",
@@ -167,6 +169,7 @@ PROJECTS = [
     ),
     dict(
         slug="crm-assistant",
+        featured=True,
         title="In-CRM AI assistant",
         cat="ai",
         status="client",
@@ -629,7 +632,7 @@ def header(index=False):
     <a class="brand" href="{home}"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="{home}#work">Work</a>
-      <a href="{home}#how">How I work</a>
+      <a href="{home}#about">About</a>
       <a href="{home}#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="{CALENDLY}">Book a call</a>
@@ -653,7 +656,7 @@ def footer():
 """
 
 
-def canvas(c):
+def canvas(c, pulse=False):
     parts = []
     for i, (typ, name, sub) in enumerate(c["nodes"]):
         if i:
@@ -662,10 +665,20 @@ def canvas(c):
             f'<div class="node node-{typ}"><div class="node-type">{NODE_TYPE_LABEL[typ]}</div>'
             f'<div class="node-name">{e(name)}</div><div class="node-sub">{e(sub)}</div></div>'
         )
+    cls = "canvas pulse" if pulse else "canvas"
     return (
-        f'<figure class="canvas"><figcaption class="canvas-title">{e(c["title"])}</figcaption>'
+        f'<figure class="{cls}"><figcaption class="canvas-title">{e(c["title"])}</figcaption>'
         f'<div class="track">{"".join(parts)}</div></figure>'
     )
+
+
+def mini(c):
+    parts = []
+    for i, (typ, name, sub) in enumerate(c["nodes"]):
+        if i:
+            parts.append('<span class="mini-edge" aria-hidden="true"></span>')
+        parts.append(f'<span class="mini-node node-{typ}">{e(name)}</span>')
+    return f'<div class="mini" aria-label="Pipeline: {e(", ".join(n for _, n, _ in c["nodes"]))}">{"".join(parts)}</div>'
 
 
 def status_pill(p):
@@ -673,32 +686,51 @@ def status_pill(p):
     return f'<span class="status status-{p["status"]}">{label}</span>'
 
 
+def words(p):
+    text = " ".join([p["lede"]] + p["why"] + [t + " " + d for t, d in p["steps"]] + p["outcome"] + p["notes"])
+    return len(text.split())
+
+
+def read_time(p):
+    return max(1, round(words(p) / 200))
+
+
+def fcard(p):
+    v, l = p["index_facts"][0]
+    stack = " · ".join(e(s) for s in p["stack"][:5])
+    quote = ""
+    if p.get("quotes"):
+        n, r, t = p["quotes"][0]
+        quote = f'<blockquote class="fcard-quote"><p>{e(t)}</p><footer>{e(n)}, {e(r)}</footer></blockquote>'
+    return f"""<article class="fcard" data-cat="{p["cat"]}" data-href="{p["slug"]}.html">
+  <div class="entry-eyebrow"><span class="cat">{CATS[p["cat"]]}</span>{status_pill(p)}</div>
+  <h3 class="fcard-title"><a href="{p["slug"]}.html">{e(p["title"])}</a></h3>
+  <p class="fcard-one">{e(p["one"])}</p>
+  {mini(p["canvases"][0])}
+  <div class="fcard-foot">
+    <div class="fact fact-big"><span class="fact-val">{e(v)}</span><span class="fact-lab">{e(l)}</span></div>
+    <p class="entry-stack">{stack}</p>
+  </div>
+  {quote}
+  <span class="entry-more">Read the case study</span>
+</article>"""
+
+
 def entry(p):
     facts = "".join(
         f'<div class="fact"><span class="fact-val">{e(v)}</span><span class="fact-lab">{e(l)}</span></div>'
-        for v, l in p["index_facts"]
+        for v, l in p["index_facts"][:2]
     )
-    stack = " · ".join(e(s) for s in p["stack"])
-    featured = " featured" if p.get("featured") else ""
-    body = f"""
+    stack = " · ".join(e(s) for s in p["stack"][:5])
+    return f"""<article class="entry" data-cat="{p["cat"]}" data-href="{p["slug"]}.html">
   <div class="entry-main">
     <div class="entry-eyebrow"><span class="cat">{CATS[p["cat"]]}</span>{status_pill(p)}</div>
     <h3 class="entry-title"><a href="{p["slug"]}.html">{e(p["title"])}</a></h3>
     <p class="entry-one">{e(p["one"])}</p>
     <p class="entry-stack">{stack}</p>
   </div>
-  <div class="entry-side">{facts}<span class="entry-more">Read the case study</span></div>"""
-    if p.get("featured"):
-        quotes = "".join(
-            f'<blockquote class="reply"><p>{e(t)}</p><footer>{e(n)}, {e(r)}</footer></blockquote>'
-            for n, r, t in p["quotes"]
-        )
-        body += f"""
-  <div class="entry-wide">
-    {"".join(canvas(c) for c in p["canvases"])}
-    <div class="replies"><div class="replies-title">Replies from the first run</div>{quotes}</div>
-  </div>"""
-    return f'<article class="entry{featured}" data-cat="{p["cat"]}" data-href="{p["slug"]}.html">{body}\n</article>'
+  <div class="entry-side">{facts}<span class="entry-more">Read the case study</span></div>
+</article>"""
 
 
 def build_index():
@@ -709,15 +741,20 @@ def build_index():
     filters = '<button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All</button>' + "".join(
         f'<button type="button" class="filter" data-filter="{k}" aria-pressed="false">{v}</button>' for k, v in CATS.items()
     )
-    entries = "\n".join(entry(p) for p in PROJECTS)
-    description = "Fourteen automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing and reporting, with how each one runs and what came out of it."
+    featured = [p for p in PROJECTS if p.get("featured")]
+    rest = [p for p in PROJECTS if not p.get("featured")]
+    fcards = "\n".join(fcard(p) for p in featured)
+    entries = "\n".join(entry(p) for p in rest)
+    n = len(PROJECTS)
+    description = f"{n} automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing, a multi-tenant product and reporting, with how each one runs and what came out of it."
     html = head("Jonathan Bayo, automation case studies", description, "", "") + header(index=True) + f"""
 <main>
   <section class="hero wrap">
     <div class="hero-text">
       <p class="eyebrow">Case studies</p>
       <h1>I build automations that run on their own.</h1>
-      <p class="hero-lede">I'm Jonathan Bayo. I build lead research, outreach, CRM and reporting systems in n8n, Python and Claude for founders and small teams. Fourteen of them are below, with how each one runs and what came out of it.</p>
+      <p class="hero-lede">I'm Jonathan Bayo. I build lead research, outreach, CRM and reporting systems in n8n, Python and Claude for founders and small teams. {n} of them are below, with how each one runs and what came out of it.</p>
+      <div class="hero-actions"><a class="btn" href="#work">See the work</a><a class="btn btn-quiet" href="{CALENDLY}">Book a 15 minute call</a></div>
     </div>
     <dl class="hero-facts">
       <div><dt>Usual stack</dt><dd>n8n, Python, Claude, Supabase, Apify</dd></div>
@@ -729,22 +766,38 @@ def build_index():
 
   <section class="wrap work" id="work">
     <div class="work-head">
-      <h2>The work</h2>
+      <h2>Featured</h2>
+      <p class="work-sub">The four systems that best show what I do.</p>
+    </div>
+    <div class="fgrid">
+{fcards}
+    </div>
+  </section>
+
+  <section class="wrap work work-all" id="all">
+    <div class="work-head">
+      <h2>All the work</h2>
       <div class="filters" role="group" aria-label="Filter by category">{filters}</div>
     </div>
     <p class="legend">{legend}</p>
     <div class="entries">
 {entries}
     </div>
-    <p class="empty" id="empty" hidden>Nothing in this category yet.</p>
+    <p class="empty" id="empty" hidden>Nothing else in this category. The featured ones above may have it.</p>
   </section>
 
-  <section class="wrap how" id="how">
-    <h2>How I work</h2>
-    <div class="how-cols">
-      <p>We start with what's taking too long. I map the steps, pick the smallest system that removes them and build it in n8n or Python, with Claude where a step needs judgment.</p>
-      <p>Everything I build logs its own runs, never sends the same thing twice and fails loudly instead of quietly. You get the workflows, the credentials in your own accounts and a short doc on how it runs and what to do when it stops.</p>
-      <p>Most builds take a week or two. If it's going to take longer I'll say so before we start.</p>
+  <section class="wrap about" id="about">
+    <div class="about-grid">
+      <div>
+        <h2>About</h2>
+        <p>I've spent the past year as the automation and back end engineer for a B2B sales intelligence company, building the research pipeline, the CRM tooling and the multi-tenant product you see above. Alongside that I take on builds for founders and small teams: outreach, lead research, onboarding, reporting.</p>
+        <p>I work in n8n and Python, use Claude where a step needs judgment, and keep everything in your own accounts so nothing depends on me being around.</p>
+      </div>
+      <div>
+        <h2>How I work</h2>
+        <p>We start with what's taking too long. I map the steps, pick the smallest system that removes them and build it, with Claude where a step needs judgment.</p>
+        <p>Everything logs its own runs, never sends the same thing twice and fails loudly instead of quietly. You get the workflows, the credentials in your accounts and a short doc on how it runs and what to do when it stops. Most builds take a week or two. If it's going to take longer I'll say so before we start.</p>
+      </div>
     </div>
   </section>
 
@@ -761,7 +814,13 @@ def build_index():
     (ROOT / "index.html").write_text(html, encoding="utf-8")
 
 
-def build_project(p):
+def neighbour_card(label, p):
+    if not p:
+        return ""
+    return f"""<a class="nb" href="{p["slug"]}.html"><span class="nb-label">{label}</span><span class="nb-title">{e(p["title"])}</span><span class="nb-one">{e(p["one"])}</span></a>"""
+
+
+def build_project(p, prev_p, next_p):
     facts = "".join(f"<div><dt>{e(l)}</dt><dd>{e(v)}</dd></div>" for l, v in p["facts"])
     why = "".join(f"<p>{e(t)}</p>" for t in p["why"])
     steps = "".join(f"<li><h3>{e(t)}</h3><p>{e(d)}</p></li>" for t, d in p["steps"])
@@ -782,39 +841,47 @@ def build_project(p):
         notes += f'<p><a href="{slug}.html">{e(text)}</a></p>'
     stack = "".join(f"<li>{e(s)}</li>" for s in p["stack"])
     title = f'{p["title"]}, Jonathan Bayo'
+    canvases = "".join(canvas(c, pulse=(i == 0)) for i, c in enumerate(p["canvases"]))
     html = head(title, p["one"], f'{p["slug"]}.html') + header() + f"""
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">{CATS[p["cat"]]}</span>{status_pill(p)}</div>
+  <div class="entry-eyebrow"><span class="cat">{CATS[p["cat"]]}</span>{status_pill(p)}<span class="cat cat-time">{read_time(p)} min read</span></div>
   <h1>{e(p["title"])}</h1>
   <p class="lede">{e(p["lede"])}</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row">{ofacts}</div>
+  </section>
+
   <dl class="facts">{facts}</dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     {why}
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    {"".join(canvas(c) for c in p["canvases"])}
+    {canvases}
     <ol class="steps">{steps}</ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     {outcome}
-    <div class="fact-row">{ofacts}</div>
     {quotes}
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     {notes}
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack">{stack}</ul>
   </section>
@@ -827,6 +894,11 @@ def build_project(p):
       <a class="btn btn-quiet" href="mailto:{EMAIL}">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    {neighbour_card("Previous", prev_p)}
+    {neighbour_card("Next", next_p)}
+  </nav>
 </main>
 """ + footer()
     (ROOT / f'{p["slug"]}.html').write_text(html, encoding="utf-8")
@@ -846,7 +918,7 @@ def build_404():
 
 if __name__ == "__main__":
     build_index()
-    for p in PROJECTS:
-        build_project(p)
+    for i, p in enumerate(PROJECTS):
+        build_project(p, PROJECTS[i - 1] if i else None, PROJECTS[i + 1] if i + 1 < len(PROJECTS) else None)
     build_404()
     print(f"built index, {len(PROJECTS)} case studies, 404")

@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Operations</span><span class="status status-client">Client</span></div>
+  <div class="entry-eyebrow"><span class="cat">Operations</span><span class="status status-client">Client</span><span class="cat cat-time">1 min read</span></div>
   <h1>Zero touch client onboarding</h1>
   <p class="lede">When a new client fills in the onboarding form, everything that used to take an afternoon happens on its own: the contract is generated and sent for signature, and once it&#x27;s signed the folder, the Slack channel, the HubSpot deal and the welcome email follow.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">~60 s</span><span class="fact-lab">after signing</span></div><div class="fact"><span class="fact-val">~8 h</span><span class="fact-lab">saved per client</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual steps</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Trigger</dt><dd>onboarding form</dd></div><div><dt>End to end</dt><dd>about 60 s after signing</dd></div><div><dt>Saved per client</dt><dd>about 8 hours</dd></div><div><dt>Signature</dt><dd>DocuSign</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Onboarding is the same steps every time: draft the contract, send it, chase the signature, make the folder, add people to Slack, update the CRM. Done by hand it takes hours and something always gets missed.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Pipeline</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Form</div><div class="node-sub">client details</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Contract</div><div class="node-sub">from template</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">DocuSign</div><div class="node-sub">waits for signature</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Drive folder</div><div class="node-sub">shared with client</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Slack</div><div class="node-sub">channel and invite</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">HubSpot</div><div class="node-sub">deal created</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Welcome email</div><div class="node-sub">links and next steps</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Pipeline</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">Form</div><div class="node-sub">client details</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Contract</div><div class="node-sub">from template</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">DocuSign</div><div class="node-sub">waits for signature</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Drive folder</div><div class="node-sub">shared with client</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Slack</div><div class="node-sub">channel and invite</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">HubSpot</div><div class="node-sub">deal created</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Welcome email</div><div class="node-sub">links and next steps</div></div></div></figure>
     <ol class="steps"><li><h3>Form</h3><p>The client fills in name, company, scope and start date. Two minutes.</p></li><li><h3>Contract</h3><p>The template is filled with the client&#x27;s details and scope of work.</p></li><li><h3>Signature</h3><p>DocuSign sends it to the client. The workflow waits on the signed event before doing anything else.</p></li><li><h3>Folder</h3><p>A Google Drive project folder is created with the standard structure and shared with the client and the team.</p></li><li><h3>Slack</h3><p>A client channel is created, the team is added and the client gets an invite.</p></li><li><h3>CRM</h3><p>The client appears in HubSpot as a won deal with the fields filled.</p></li><li><h3>Welcome</h3><p>The client gets one email with the contract copy, the folder link, the Slack invite and what happens next.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>About a minute after the signature lands, the client has everything and the team has nothing to set up. Every client goes through exactly the same steps.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">~60 s</span><span class="fact-lab">after signing</span></div><div class="fact"><span class="fact-val">~8 h</span><span class="fact-lab">saved per client</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">manual steps</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>Nothing downstream fires until DocuSign reports the signature, so an unsigned contract never creates a channel or a deal. That one gate is what makes the rest safe to automate.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Google Forms</li><li>DocuSign</li><li>Google Drive</li><li>Slack</li><li>HubSpot</li><li>Gmail</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="recruitment-engine.html"><span class="nb-label">Previous</span><span class="nb-title">Recruitment enrichment engine</span><span class="nb-one">Scrapes candidate profiles for a role, enriches them with public data, scores fit against the job with AI and pushes only the qualified ones into Airtable with a summary for the recruiter.</span></a>
+    <a class="nb" href="investor-reports.html"><span class="nb-label">Next</span><span class="nb-title">Investor report automation</span><span class="nb-one">On the first of the month it pulls portfolio numbers from Sheets, has Claude write the month&#x27;s narrative, builds each investor&#x27;s report with their own allocation and sends it.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">

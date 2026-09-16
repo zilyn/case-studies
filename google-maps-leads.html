@@ -25,7 +25,7 @@
     <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
     <nav class="top-nav" aria-label="Site">
       <a href="index.html#work">Work</a>
-      <a href="index.html#how">How I work</a>
+      <a href="index.html#about">About</a>
       <a href="index.html#contact">Contact</a>
       <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
       <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
@@ -35,36 +35,43 @@
 
 <main class="article wrap">
   <a class="back" href="index.html#work">All case studies</a>
-  <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-built">Built</span></div>
+  <div class="entry-eyebrow"><span class="cat">Outreach</span><span class="status status-built">Built</span><span class="cat cat-time">1 min read</span></div>
   <h1>Google Maps lead discovery</h1>
   <p class="lede">Give it a category and a city, like &quot;digital agency in Austin&quot;, and about twenty minutes later there&#x27;s a sheet of several hundred businesses with emails, a one line description and a lead score.</p>
 
+  <section class="results" aria-label="Results">
+    <div class="fact-row"><div class="fact"><span class="fact-val">500+</span><span class="fact-lab">leads a run</span></div><div class="fact"><span class="fact-val">~20 min</span><span class="fact-lab">full run</span></div><div class="fact"><span class="fact-val">~80%</span><span class="fact-lab">with an email</span></div></div>
+  </section>
+
   <dl class="facts"><div><dt>Input</dt><dd>a category and a city</dd></div><div><dt>Leads per run</dt><dd>500+</dd></div><div><dt>Run time</dt><dd>about 20 minutes</dd></div><div><dt>Email found</dt><dd>around 80% of businesses</dd></div></dl>
 
-  <section class="sec">
+  <nav class="subnav" aria-label="On this page">
+    <a href="#why">Why</a><a href="#how">How it runs</a><a href="#outcome">Outcome</a><a href="#notes">Notes</a><a href="#stack">Stack</a>
+  </nav>
+
+  <section class="sec" id="why">
     <h2>Why it exists</h2>
     <p>Building a local lead list by hand means searching, clicking through sites and copying emails into a sheet. Most people give up after 20.</p>
   </section>
 
-  <section class="sec sec-wide">
+  <section class="sec sec-wide" id="how">
     <h2>How it runs</h2>
-    <figure class="canvas"><figcaption class="canvas-title">Pipeline</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Google Places</div><div class="node-sub">via Apify</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter</div><div class="node-sub">no website, dupes by domain</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Scrape site</div><div class="node-sub">home and contact pages</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">what they do, likely pains</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Google Sheets</div><div class="node-sub">lead list</div></div></div></figure>
+    <figure class="canvas pulse"><figcaption class="canvas-title">Pipeline</figcaption><div class="track"><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Google Places</div><div class="node-sub">via Apify</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Filter</div><div class="node-sub">no website, dupes by domain</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Scrape site</div><div class="node-sub">home and contact pages</div></div><span class="edge" aria-hidden="true"></span><div class="node node-ai"><div class="node-type">AI</div><div class="node-name">Claude</div><div class="node-sub">what they do, likely pains</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Google Sheets</div><div class="node-sub">lead list</div></div></div></figure>
     <ol class="steps"><li><h3>Search</h3><p>Apify&#x27;s Google Places actor returns businesses for the category and location, with names, addresses, phones, websites and ratings.</p></li><li><h3>Filter</h3><p>Businesses with no website are dropped, excluded names are removed and the rest are deduplicated by domain.</p></li><li><h3>Scrape</h3><p>A Python node reads each homepage and contact page looking for email addresses, team names and a description.</p></li><li><h3>Extract</h3><p>Claude reads the scraped text and writes down the business type, likely pain points and a contact name where there is one.</p></li><li><h3>Save</h3><p>Each business goes into the sheet with its email, website, description, signal and score.</p></li></ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="outcome">
     <h2>What came out of it</h2>
     <p>A run brings back 500 or more businesses in about twenty minutes, roughly 80% of them with an email found.</p>
-    <div class="fact-row"><div class="fact"><span class="fact-val">500+</span><span class="fact-lab">leads a run</span></div><div class="fact"><span class="fact-val">~20 min</span><span class="fact-lab">full run</span></div><div class="fact"><span class="fact-val">~80%</span><span class="fact-lab">with an email</span></div></div>
     
   </section>
 
-  <section class="sec">
+  <section class="sec" id="notes">
     <h2>Notes</h2>
     <p>This is a working build that proves the pattern. I haven&#x27;t run it for a client yet. Contact pages are inconsistent, so the scraper checks the homepage and the contact page and gives up quickly on anything else rather than crawling the whole site.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="stack">
     <h2>Stack</h2>
     <ul class="stack"><li>n8n</li><li>Apify (Google Places)</li><li>Python</li><li>Claude API</li><li>Google Sheets</li></ul>
   </section>
@@ -77,6 +84,11 @@
       <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
     </div>
   </section>
+
+  <nav class="next-nav" aria-label="More case studies">
+    <a class="nb" href="crm-pipeline.html"><span class="nb-label">Previous</span><span class="nb-title">CRM lead enrichment pipeline</span><span class="nb-one">Takes a scored lead from the monitor, has Claude write a two sentence problem statement for the company, builds the full CRM record and pushes it to GoHighLevel. About three seconds a lead.</span></a>
+    <a class="nb" href="rag-assistant.html"><span class="nb-label">Next</span><span class="nb-title">Internal knowledge assistant</span><span class="nb-one">Staff ask a plain question about company documents, policies and contracts and get an answer with the source cited. Runs on the company&#x27;s own servers.</span></a>
+  </nav>
 </main>
 <footer class="foot">
   <div class="wrap foot-row">
