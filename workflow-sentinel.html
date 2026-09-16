@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow watchdog and uptime monitor, Jonathan Bayo</title>
+<meta name="description" content="A daily n8n job that checks every other workflow, tells a stall from a weekly schedule, re-fires what it can, flags what needs money, and only emails a person when it can&#x27;t fix the problem itself.">
+<link rel="canonical" href="https://zilyn.github.io/case-studies/workflow-sentinel.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Workflow watchdog and uptime monitor, Jonathan Bayo">
+<meta property="og:description" content="A daily n8n job that checks every other workflow, tells a stall from a weekly schedule, re-fires what it can, flags what needs money, and only emails a person when it can&#x27;t fix the problem itself.">
+<meta property="og:url" content="https://zilyn.github.io/case-studies/workflow-sentinel.html">
+<meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="index.html"><span class="mark" aria-hidden="true"></span>Jonathan Bayo</a>
+    <nav class="top-nav" aria-label="Site">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#how">How I work</a>
+      <a href="index.html#contact">Contact</a>
+      <button class="theme" type="button" id="theme-toggle" aria-label="Switch colour theme">Theme</button>
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a call</a>
+    </nav>
+  </div>
+</header>
+
+<main class="article wrap">
+  <a class="back" href="index.html#work">All case studies</a>
+  <div class="entry-eyebrow"><span class="cat">Operations</span><span class="status status-client">Client</span></div>
+  <h1>Workflow watchdog and uptime monitor</h1>
+  <p class="lede">Built the day I found a nightly workflow had been failing for two weeks and nobody knew. The client&#x27;s rule was simple: everything must run all the time, check daily, heal what you can, email me only when you can&#x27;t.</p>
+
+  <dl class="facts"><div><dt>Runs</dt><dd>daily at 06:30 UTC</dd></div><div><dt>Watches</dt><dd>every active workflow</dd></div><div><dt>Heals</dt><dd>re-fires once, never twice</dd></div><div><dt>Emails</dt><dd>only when a person is needed</dd></div></dl>
+
+  <section class="sec">
+    <h2>Why it exists</h2>
+    <p>Two dozen scheduled workflows and no one watching them. A failure only surfaced when someone noticed the data had stopped moving, which on a nightly pipeline can take weeks.</p>
+  </section>
+
+  <section class="sec sec-wide">
+    <h2>How it runs</h2>
+    <figure class="canvas"><figcaption class="canvas-title">Every morning</figcaption><div class="track"><div class="node node-trigger"><div class="node-type">Trigger</div><div class="node-name">06:30</div><div class="node-sub">daily</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">n8n API</div><div class="node-sub">all active workflows</div></div><span class="edge" aria-hidden="true"></span><div class="node node-fetch"><div class="node-type">Fetch</div><div class="node-name">Executions</div><div class="node-sub">last 20 each</div></div><span class="edge" aria-hidden="true"></span><div class="node node-transform"><div class="node-type">Transform</div><div class="node-name">Classify</div><div class="node-sub">error, stall, credits</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Re-fire</div><div class="node-sub">the workflow&#x27;s own webhook</div></div><span class="edge" aria-hidden="true"></span><div class="node node-store"><div class="node-type">Store</div><div class="node-name">Heartbeat</div><div class="node-sub">alerts table</div></div><span class="edge" aria-hidden="true"></span><div class="node node-send"><div class="node-type">Send</div><div class="node-name">Email</div><div class="node-sub">only if action needed</div></div></div></figure>
+    <ol class="steps"><li><h3>List</h3><p>Pulls every active workflow through the n8n API and the last twenty executions of each.</p></li><li><h3>Errors</h3><p>Anything that errored in the last 24 hours and hasn&#x27;t since recovered is flagged.</p></li><li><h3>Stalls</h3><p>A stall threshold per workflow: at least 36 hours, or 1.8 times that workflow&#x27;s usual gap between runs, so a Monday job isn&#x27;t reported missing on Wednesday.</p></li><li><h3>Credits</h3><p>Failures that match a credit or quota message, from the AI API, the enrichment provider, the email checker or the search API, are marked action needed and never re-fired. Re-firing those only burns more.</p></li><li><h3>Heal</h3><p>Everything else gets its own production webhook fired once. If it recovers, the next morning&#x27;s report says so.</p></li><li><h3>Report</h3><p>A heartbeat row goes into an alerts table every day with the findings, and an email goes out only when a person has to do something.</p></li><li><h3>Uptime</h3><p>A second job probes the public apps every five minutes and emails on down and on recovery. A GitHub Actions check does the same from outside the box every fifteen minutes and opens an issue, so an outage of the box itself still gets seen.</p></li></ol>
+  </section>
+
+  <section class="sec">
+    <h2>What came out of it</h2>
+    <p>The first live run caught a verifier that had been timing out every night and a nightly job running out of memory, and re-fired the first one. Since then the morning email is the only way anyone hears about a broken workflow, and most days there isn&#x27;t one.</p>
+    <div class="fact-row"><div class="fact"><span class="fact-val">2</span><span class="fact-lab">real failures caught on run one</span></div><div class="fact"><span class="fact-val">1</span><span class="fact-lab">email a day at most</span></div><div class="fact"><span class="fact-val">0</span><span class="fact-lab">silent failures since</span></div></div>
+    
+  </section>
+
+  <section class="sec">
+    <h2>Notes</h2>
+    <p>The adaptive stall threshold is the part worth copying. A fixed number either misses a stalled nightly job or cries wolf on every weekly one. Two things I learned the hard way: the n8n container resolves its own public hostname to itself, so the box has to be probed from outside, and workflow static data only persists on production runs, not editor test runs.</p>
+  </section>
+
+  <section class="sec">
+    <h2>Stack</h2>
+    <ul class="stack"><li>n8n</li><li>n8n public API</li><li>Supabase</li><li>Microsoft Graph mail</li><li>GitHub Actions</li></ul>
+  </section>
+
+  <section class="cta cta-article" id="contact">
+    <h2>Want something like this built?</h2>
+    <p>Tell me what you're trying to automate. Most things can be built in a week or two.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://calendly.com/bayoadegokeiyanu/meeting-with-jonathan">Book a 15 minute call</a>
+      <a class="btn btn-quiet" href="mailto:bayoadegokeiyanu@gmail.com">Email me</a>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap foot-row">
+    <span>Jonathan Bayo</span>
+    <span><a href="mailto:bayoadegokeiyanu@gmail.com">bayoadegokeiyanu@gmail.com</a></span>
+    <span><a href="https://github.com/zilyn">github.com/zilyn</a></span>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>
