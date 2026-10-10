@@ -31,6 +31,7 @@ STATUS = {
 PROJECTS = [
     dict(
         slug="linkedin-outreach",
+        card=dict(name="Cold Outreach", role="the scout", sprite="envelope", color=("#FB923C", "#FDBA74", "251,146,60"), text="Finds people on LinkedIn, reads their recent posts and writes each one a short email with Claude. Running for my own business."),
         title="LinkedIn cold outreach system",
         cat="outreach",
         status="live",
@@ -81,6 +82,7 @@ PROJECTS = [
     ),
     dict(
         slug="buyer-intent-pipeline",
+        card=dict(name="Buyer Intent", role="the night owl", sprite="owl", color=("#A78BFA", "#C4B5FD", "167,139,250"), text="28 n8n workflows that look for buying signals every night and turn them into scored companies with checked contacts in a sales CRM."),
         featured=True,
         title="Buyer intent research pipeline",
         cat="intelligence",
@@ -131,6 +133,7 @@ PROJECTS = [
     ),
     dict(
         slug="signals-saas",
+        card=dict(name="Signals", role="the product", sprite="servers", color=("#2DD4BF", "#5EEAD4", "45,212,191"), text="Took a client's demo screens to a multi-tenant SaaS in three weeks: logins, roles, and a check before every release that no workspace sees another's data."),
         featured=True,
         title="Multi-tenant buyer intent product",
         cat="product",
@@ -169,6 +172,7 @@ PROJECTS = [
     ),
     dict(
         slug="crm-assistant",
+        card=dict(name="CRM Assistant", role="the analyst", sprite="bubble", color=("#60A5FA", "#93C5FD", "96,165,250"), text="A chat assistant inside a CRM that answers from live data across 23 tables. Rebuilt from 4 of 9 answers right to 13 of 13."),
         featured=True,
         title="In-CRM AI assistant",
         cat="ai",
@@ -598,6 +602,231 @@ def e(s):
     return escape(s, quote=True)
 
 
+# Pixel mascots for the portfolio cards. One character per pixel, "." is empty.
+# a, l, d are the card's own colour (base, light, dark); the rest are fixed.
+SPRITES = {
+    "envelope": [
+        "................",
+        "................",
+        "................",
+        ".kkkkkkkkkkkkkk.",
+        ".kkaaaaaaaaaakk.",
+        ".kwkaaaaaaaakwk.",
+        ".kwwkaaaaaakwwk.",
+        ".kwwwkaaaakwwwk.",
+        ".kwwwwkllkwwwwk.",
+        ".kwwwwwkkwwwwwk.",
+        ".kwwewwwwwwewwk.",
+        ".kwpwwwkkwwwpwk.",
+        ".kwwwwwwwwwwwwk.",
+        ".kssssssssssssk.",
+        ".kkkkkkkkkkkkkk.",
+        "................",
+    ],
+    "owl": [
+        "................",
+        "..kk........kk..",
+        "..kdk......kdk..",
+        "..kddkkkkkkddk..",
+        "..kaaaaaaaaaak..",
+        ".kawwwaaaawwwak.",
+        ".kawewayyawewak.",
+        ".kawwwayyawwwak.",
+        ".kdaallllllaadk.",
+        ".kddlvllllvlddk.",
+        ".kddllllllllddk.",
+        ".kddllvllvllddk.",
+        "..kdlllllllldk..",
+        "...kkkkkkkkkk...",
+        "....yy....yy....",
+        "................",
+    ],
+    "servers": [
+        "................",
+        ".......yy.......",
+        ".......kk.......",
+        "...kkkkkkkkkk...",
+        "...klaaaaaaak...",
+        "...klyyaaddak...",
+        "...klyyaaddak...",
+        "...klaaaaaaak...",
+        "...klddaawwak...",
+        "...klddaawwak...",
+        "...klaaaaaaak...",
+        "...klwwkkyyak...",
+        "...klwwkkyyak...",
+        "..kkkkkkkkkkkk..",
+        "...ssssssssss...",
+        "................",
+    ],
+    "bubble": [
+        "................",
+        "................",
+        "...kkkkkkkkkk...",
+        "..kllaaaaaaaak..",
+        ".klaaaaaaaaaaak.",
+        ".kaaewaaaaewaak.",
+        ".kaaeeaaaaeeaak.",
+        ".kapaakaakaapak.",
+        ".kaaaaakkaaaaak.",
+        ".kdaaaaaaaaaadk.",
+        "..kddddddddddk..",
+        "..kdkkkkkkkkk...",
+        "..kk............",
+        "................",
+        "................",
+        "................",
+    ],
+    "robot": [
+        "................",
+        ".......yy.......",
+        ".......kk.......",
+        "...kkkkkkkkkk...",
+        "..kwwwwwwwwwwk..",
+        "..kwkkkkkkkkwk..",
+        "..kwkgkkkkgkwk..",
+        "..kwkkkkkkkkwk..",
+        "..kwwwwwwwwwwk..",
+        "...kkkkkkkkkk...",
+        "....kaaaaaak....",
+        "...kaaywwyaak...",
+        "...kaaaaaaaak...",
+        "....kkkkkkkk....",
+        "................",
+        "................",
+    ],
+}
+FIXED_PIXELS = {"k": "#1A1626", "e": "#1A1626", "w": "#F4F1FA", "s": "#C9CCDC", "p": "#F9A8D4", "y": "#FCD34D", "g": "#4ADE80", "v": "#8B7FB8"}
+
+
+def shade(hex_colour, f):
+    r, g, b = (int(hex_colour[i:i + 2], 16) for i in (1, 3, 5))
+    return "#%02X%02X%02X" % (int(r * f), int(g * f), int(b * f))
+
+
+def sprite_svg(name, colour, light, size, cls="px mascot"):
+    pal = dict(FIXED_PIXELS, a=colour, l=light, d=shade(colour, 0.62))
+    rects = []
+    for y, row in enumerate(SPRITES[name]):
+        assert len(row) == 16, (name, y)
+        x = 0
+        while x < 16:
+            c = row[x]
+            run = 1
+            while x + run < 16 and row[x + run] == c:
+                run += 1
+            if c != ".":
+                rects.append(f'<rect x="{x}" y="{y}" width="{run}" height="1" fill="{pal[c]}"/>')
+            x += run
+    return (f'<svg class="{cls}" aria-hidden="true" focusable="false" width="{size}" height="{size}" '
+            f'viewBox="0 0 16 16" shape-rendering="crispEdges">{"".join(rects)}</svg>')
+
+
+SPARKLES = [(14, 16, 1.0), (82, 12, 0.7), (88, 34, 1.0), (10, 52, 0.7), (92, 66, 0.8), (20, 82, 0.6), (76, 86, 0.9), (50, 6, 0.5)]
+
+
+def sparkles():
+    return "".join(
+        f'<span class="spark" style="left:{x}%;top:{y}%;--s:{s};--d:{i * 0.45:.2f}s"></span>'
+        for i, (x, y, s) in enumerate(SPARKLES)
+    )
+
+
+ICONS = {
+    "outreach": '<path d="M21 3 10 14"/><path d="M21 3 14.5 21l-4.5-7-7-4.5z"/>',
+    "intelligence": '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/>',
+    "product": '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+    "ai": '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m12 8 1.4 2.6L16 12l-2.6 1.4L12 16l-1.4-2.6L8 12l2.6-1.4z"/>',
+    "ops": '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+    "live": '<circle cx="12" cy="12" r="3.2"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4"/>',
+    "client": '<rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M9 7.5V5.5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5.5v2M3.5 13h17"/>',
+    "built": '<path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L4 17l3 3 5.2-5.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+}
+ORB_COLOUR = {"outreach": "#FB923C", "intelligence": "#A78BFA", "product": "#2DD4BF", "ai": "#60A5FA", "ops": "#4ADE80",
+              "live": "#4ADE80", "client": "#93C5FD", "built": "#FCD34D"}
+
+
+def orb(key, label):
+    return (f'<span class="orb" title="{e(label)}" style="color:{ORB_COLOUR[key]}">'
+            f'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[key]}</svg></span>')
+
+
+def card(p, n):
+    c = p["card"]
+    a, al, rgb = c["color"]
+    flavor = "{} {}".format(*p["index_facts"][0])
+    status_label, status_desc = STATUS[p["status"]]
+    orbs = orb(p["cat"], CATS[p["cat"]]) + orb(p["status"], f"{status_label}, {status_desc}")
+    return f"""<a class="card" href="{p["slug"]}.html" data-holo aria-label="{e(p["title"])}, read the case study" style="--a:{a};--al:{al};--argb:{rgb}">
+  <span class="card-art">
+    <span class="mascot-halo"></span>
+    {sparkles()}
+    {sprite_svg(c["sprite"], a, al, 260, "px mascot-echo")}
+    {sprite_svg(c["sprite"], a, al, 176)}
+  </span>
+  <span class="card-divider"></span>
+  <span class="card-disc"><span>{n:02d}</span></span>
+  <span class="card-notch"></span>
+  <span class="card-pane">
+    <span class="card-title"><span class="name">{e(c["name"])}</span><span class="role">· {e(c["role"])}</span></span>
+    <span class="card-body">
+      <span class="orbs">{orbs}</span>
+      <span class="card-rules">{e(c["text"])}</span>
+    </span>
+    <span class="card-foot"><span class="flavor">{e(flavor)}</span></span>
+  </span>
+  <span class="holo"></span>
+  <span class="holo2"></span>
+</a>"""
+
+
+# The rest of the work, one pack per category.
+PACKS = [
+    ("outreach", "OUT", "#FB923C", "251,146,60"),
+    ("intelligence", "INT", "#A78BFA", "167,139,250"),
+    ("ai", "AI", "#60A5FA", "96,165,250"),
+    ("ops", "OPS", "#4ADE80", "74,222,128"),
+]
+SHORT = {
+    "google-maps-leads": "Maps leads",
+    "event-followup": "Event follow up",
+    "company-monitor": "Company monitor",
+    "crm-pipeline": "CRM enrichment",
+    "recruitment-engine": "Recruitment",
+    "video-generator": "Video generator",
+    "rag-assistant": "Knowledge assistant",
+    "workflow-sentinel": "Watchdog",
+    "client-onboarding": "Onboarding",
+    "investor-reports": "Investor reports",
+}
+
+
+def pack(cat, tag, colour, rgb, items):
+    names = " · ".join(e(SHORT.get(p["slug"], p["title"])) for p in items)
+    n = len(items)
+    return f"""<a class="pack" href="#all" data-pack="{cat}" data-holo aria-label="{e(CATS[cat])}, {n} case studies" style="--pa:{colour};--prgb:{rgb}">
+  <span class="pack-inner">
+    <span class="pack-foil"></span>
+    <span class="pack-head">
+      <span><span class="pbrand">BAYO</span><span class="sub">Automation works</span></span>
+      <span class="tag">{tag}</span>
+    </span>
+    <span class="pack-art">
+      <span class="wash"></span>
+      <span class="mascot-wrap"><span class="mascot-halo"></span>{sprite_svg("robot", colour, colour, 104)}</span>
+      <span class="count-badge">{n} inside</span>
+    </span>
+    <span class="pack-label">
+      <span class="big">{e(CATS[cat].upper())}</span>
+      <span class="rule"></span>
+      <span class="tools">{names}</span>
+    </span>
+  </span>
+  <span class="holo"></span>
+</a>"""
+
+
 def head(title, description, path, extra=""):
     url = SITE + path
     return f"""<!DOCTYPE html>
@@ -672,15 +901,6 @@ def canvas(c, pulse=False):
     )
 
 
-def mini(c):
-    parts = []
-    for i, (typ, name, sub) in enumerate(c["nodes"]):
-        if i:
-            parts.append('<span class="mini-edge" aria-hidden="true"></span>')
-        parts.append(f'<span class="mini-node node-{typ}">{e(name)}</span>')
-    return f'<div class="mini" aria-label="Pipeline: {e(", ".join(n for _, n, _ in c["nodes"]))}">{"".join(parts)}</div>'
-
-
 def status_pill(p):
     label = STATUS[p["status"]][0]
     return f'<span class="status status-{p["status"]}">{label}</span>'
@@ -693,27 +913,6 @@ def words(p):
 
 def read_time(p):
     return max(1, round(words(p) / 200))
-
-
-def fcard(p):
-    v, l = p["index_facts"][0]
-    stack = " · ".join(e(s) for s in p["stack"][:5])
-    quote = ""
-    if p.get("quotes"):
-        n, r, t = p["quotes"][0]
-        quote = f'<blockquote class="fcard-quote"><p>{e(t)}</p><footer>{e(n)}, {e(r)}</footer></blockquote>'
-    return f"""<article class="fcard" data-cat="{p["cat"]}" data-href="{p["slug"]}.html">
-  <div class="entry-eyebrow"><span class="cat">{CATS[p["cat"]]}</span>{status_pill(p)}</div>
-  <h3 class="fcard-title"><a href="{p["slug"]}.html">{e(p["title"])}</a></h3>
-  <p class="fcard-one">{e(p["one"])}</p>
-  {mini(p["canvases"][0])}
-  <div class="fcard-foot">
-    <div class="fact fact-big"><span class="fact-val">{e(v)}</span><span class="fact-lab">{e(l)}</span></div>
-    <p class="entry-stack">{stack}</p>
-  </div>
-  {quote}
-  <span class="entry-more">Read the case study</span>
-</article>"""
 
 
 def entry(p):
@@ -743,7 +942,12 @@ def build_index():
     )
     featured = [p for p in PROJECTS if p.get("featured")]
     rest = [p for p in PROJECTS if not p.get("featured")]
-    fcards = "\n".join(fcard(p) for p in featured)
+    cards = "\n".join(card(p, i + 1) for i, p in enumerate(featured))
+    packs = "\n".join(
+        pack(cat, tag, colour, rgb, [p for p in rest if p["cat"] == cat])
+        for cat, tag, colour, rgb in PACKS
+        if any(p["cat"] == cat for p in rest)
+    )
     entries = "\n".join(entry(p) for p in rest)
     n = len(PROJECTS)
     description = f"{n} automation systems built by Jonathan Bayo in n8n, Python and Claude: lead research, outreach, CRM plumbing, a multi-tenant product and reporting, with how each one runs and what came out of it."
@@ -764,19 +968,28 @@ def build_index():
     </dl>
   </section>
 
-  <section class="wrap work" id="work">
-    <div class="work-head">
-      <h2>Featured</h2>
-      <p class="work-sub">The four systems that best show what I do.</p>
-    </div>
-    <div class="fgrid">
-{fcards}
+  <section class="portfolio" id="work">
+    <div class="portfolio-in">
+      <div class="portfolio-head">
+        <div>
+          <p class="p-eyebrow">The portfolio</p>
+          <p class="p-sub">The four systems that best show what I do. Each card opens the full case study.</p>
+        </div>
+        <p class="p-count">{len(featured)} featured · {n} in all</p>
+      </div>
+      <div class="deck">
+{cards}
+      </div>
+      <p class="packs-head">The rest of the deck</p>
+      <div class="packs">
+{packs}
+      </div>
     </div>
   </section>
 
   <section class="wrap work work-all" id="all">
     <div class="work-head">
-      <h2>All the work</h2>
+      <h2>The rest, one by one</h2>
       <div class="filters" role="group" aria-label="Filter by category">{filters}</div>
     </div>
     <p class="legend">{legend}</p>

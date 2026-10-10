@@ -22,12 +22,40 @@
   });
 
   // The whole card opens the case study, unless a link inside it was clicked.
-  document.querySelectorAll('.entry[data-href], .fcard[data-href]').forEach(function (el) {
+  document.querySelectorAll('.entry[data-href]').forEach(function (el) {
     el.addEventListener('click', function (e) {
       if (e.target.closest('a')) return;
       window.location.href = el.dataset.href;
     });
   });
+
+  // A pack opens the list below, filtered to its category.
+  document.querySelectorAll('.pack[data-pack]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      var btn = document.querySelector('.filter[data-filter="' + el.dataset.pack + '"]');
+      var list = document.getElementById('all');
+      if (!btn || !list) return;
+      e.preventDefault();
+      btn.click();
+      list.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+  });
+
+  // Shine and foil that follow the pointer on the portfolio cards and packs.
+  if (window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+    document.querySelectorAll('[data-holo]').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        el.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+        el.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+        el.style.setProperty('--gx', ((0.5 - x) * 18).toFixed(1) + 'px');
+        el.style.setProperty('--gy', ((0.5 - y) * 18).toFixed(1) + 'px');
+        el.style.setProperty('--holo', '1');
+      });
+      el.addEventListener('pointerleave', function () { el.style.setProperty('--holo', '0'); });
+    });
+  }
 
   // Highlight the section in view in the sticky page nav.
   var links = document.querySelectorAll('.subnav a');
